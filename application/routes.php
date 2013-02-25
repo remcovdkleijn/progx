@@ -3,15 +3,15 @@
 Route::get('/', array('as' => 'index', 'uses' => 'home@index'));
 
 // user Resource
-Route::get('login', array('as' => 'login', 'uses' => 'users@index'));
-Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show'));
-Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new'));
-Route::get('users/(:any)edit', array('as' => 'edit_user', 'uses' => 'users@edit'));
-Route::post('users', 'users@create');
-Route::put('users/(:any)', 'users@update');
-Route::delete('users/(:any)', 'users@destroy');
-Route::post('login', array('as' => 'login_post', 'uses' => 'users@login'));
-Route::get('logout', array('as' => 'logout', 'before' => 'auth', 'uses' => 'users@logout'));
+Route::get('login', array('as' => 'login', 'uses' => 'users@index')); // form login
+Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show')); // profile not niet gemaakt
+Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new')); // form register
+Route::get('users/edit', array('as' => 'edit_user', 'uses' => 'users@edit')); // form edit
+Route::post('users', 'users@create'); // POST register
+Route::put('users/edit', 'users@update'); // POST/PUT update
+Route::delete('users/(:any)', 'users@destroy'); // niet gerbuikt
+Route::post('login', array('as' => 'login_post', 'uses' => 'users@login')); // POST login
+Route::get('logout', array('as' => 'logout', 'before' => 'auth', 'uses' => 'users@logout')); // lohout
 
 Route::get('admin', array('as' => 'admin', 'before' => 'auth', function(){
 	$user = Auth::user();

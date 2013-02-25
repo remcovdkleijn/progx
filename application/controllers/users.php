@@ -47,7 +47,10 @@ class Users_Controller extends Base_Controller {
 	}
 
 	public function get_edit(){
-		
+
+		$user = Auth::user();
+
+		return View::make('user.edit', array('userdata' => $user, 'name' => $user->name));
 	}
 
 	public function get_new(){
@@ -55,6 +58,28 @@ class Users_Controller extends Base_Controller {
 	}
 
 	public function put_update(){
+
+		$rules = array(
+			'name' => 'required'
+		);
+
+		$messages = array(
+			'required' => 'The :attribute field is required.'
+		);
+
+		$validation = Validator::make(Input::all(), $rules, $messages);
+
+		if ($validation->fails()) {
+			$user = Auth::user();
+			return Redirect::to_route('edit_user')->with('form_values', array('name' => Input::get('name')))->with_errors($validation);
+    	} else {
+
+			$user = Auth::user();
+			$user->name = Input::get('name');
+			$user->save();
+			return Redirect::to_route('edit_user')->with('message', 'your account had been edited');
+
+    	}
 
 	}
 
