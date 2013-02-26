@@ -11,10 +11,15 @@ class Users_Controller extends Base_Controller {
 	public function post_create(){
 
 		$rules = array(
+			'voornaam' => 'required',
+			'achternaam' => 'required',
 			'email' => 'required|unique:users,email|email',
-			'name' => 'required',
 			'password' => 'required|min:6|confirmed',
-			'password_confirmation' => 'required|required_with:first_name'
+			'password_confirmation' => 'required|required_with:first_name',
+			'adres' => 'required',
+			'postcode' => 'required',
+			'city' => 'required',
+			'land' => 'required'
 		);
 
 		$messages = array(
@@ -24,14 +29,22 @@ class Users_Controller extends Base_Controller {
 
 		$validation = Validator::make(Input::all(), $rules, $messages);
 
+		$values = array(
+			'voornaam' => Input::get('voornaam'),
+			'achternaam' => Input::get('achternaam'),
+    		'email' => Input::get('email'),
+    		'password' => Hash::make(Input::get('password')),
+    		'adres' => Input::get('adres'),
+    		'postcode' => Input::get('postcode'),
+    		'city' => Input::get('city'),
+    		'land' => Input::get('land'),
+    	);
+
 		if ($validation->fails()) {
-        	return Redirect::to_route('new_user')->with('form_values', array('email' => Input::get('email'), 'name' => Input::get('name')))->with_errors($validation);
+			unset($values['password']);
+        	return Redirect::to_route('new_user')->with('form_values', $values)->with_errors($validation);
     	} else {
-    		$values = array(
-    			'email' => Input::get('email'),
-    			'name' => Input::get('name'),
-    			'password' => Hash::make(Input::get('password'))
-    		);
+    		
     		$user = User::create($values);
     		if($user){
     			return Redirect::to_route('index')->with('message', 'your account had been created');
@@ -50,7 +63,7 @@ class Users_Controller extends Base_Controller {
 
 		$user = Auth::user();
 
-		return View::make('user.edit', array('userdata' => $user, 'name' => $user->name));
+		return View::make('user.edit', array('userdata' => $user));
 	}
 
 	public function get_new(){
@@ -60,7 +73,12 @@ class Users_Controller extends Base_Controller {
 	public function put_update(){
 
 		$rules = array(
-			'name' => 'required'
+			'voornaam' => 'required',
+			'achternaam' => 'required',
+			'adres' => 'required',
+			'postcode' => 'required',
+			'city' => 'required',
+			'land' => 'required'	
 		);
 
 		$messages = array(
@@ -69,13 +87,21 @@ class Users_Controller extends Base_Controller {
 
 		$validation = Validator::make(Input::all(), $rules, $messages);
 
+		$values = array(
+			'voornaam' => Input::get('voornaam'),
+			'achternaam' => Input::get('achternaam'),
+    		'adres' => Input::get('adres'),
+    		'postcode' => Input::get('postcode'),
+    		'city' => Input::get('city'),
+    		'land' => Input::get('land'),
+    	);
+
 		if ($validation->fails()) {
-			$user = Auth::user();
-			return Redirect::to_route('edit_user')->with('form_values', array('name' => Input::get('name')))->with_errors($validation);
+			return Redirect::to_route('edit_user')->with('form_values', $values)->with_errors($validation);
     	} else {
 
 			$user = Auth::user();
-			$user->name = Input::get('name');
+			$user->fill($values);
 			$user->save();
 			return Redirect::to_route('edit_user')->with('message', 'your account had been edited');
 
@@ -91,12 +117,11 @@ class Users_Controller extends Base_Controller {
 
 		$rules = array(
 			'email' => 'required|email',
-			'password' => 'required|min:6',
+			'password' => 'required|min:6'
 		);
 
 		$messages = array(
-			'required' => 'The :attribute field is required.',
-			'unique' => 'The :attribute field already exists.'
+			'required' => 'The :attribute field is required.'
 		);
 
 		$validation = Validator::make(Input::all(), $rules, $messages);
@@ -111,6 +136,14 @@ class Users_Controller extends Base_Controller {
 			);
 
 			if(Auth::attempt($credentials)){
+				
+				$user = Auth::user();
+				$bedrijven = $user->bedrijven()->get();
+				if(empty($bedrijven)){
+					Session::put('logintype', 'user');
+				} else {
+					Session::put('logintype', 'bedrijf');
+				}
 				return Redirect::to_route('admin');
 			}
 			return Redirect::to_route('login')->with('loginfail', 'true');

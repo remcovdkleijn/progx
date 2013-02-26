@@ -5,7 +5,7 @@
 @endsection
 
 @section('container')
-<h2>Login</h2>
+	<h2>Login</h2>
 
 	@if (Session::has('loginfail'))
 		<p> email and password combination is not correct </p>

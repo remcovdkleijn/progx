@@ -6,9 +6,11 @@
 			<li><a href="{{ URL::to_route('new_user') }}"> Register </a></li>
 			<li><a href="{{ URL::to_route('login') }}"> Login </a></li>
 		@else
-			<li><a href="{{ URL::to_route('admin') }}"> Admin area </a></li>
 			<li><a href="{{ URL::to_route('edit_user') }}">Edit account</a></li>
 			<li><a href="{{ URL::to_route('logout') }}"> Logout </a></li>
+			@if ( Session::has('logintype') && Session::get('logintype') == 'bedrijf' )
+				<li><a href="{{ URL::to_route('bedrijven') }}">Edit bedrijf gegevens</a></li>
+			@endif
 		@endif
 	</ul>
 <nav>

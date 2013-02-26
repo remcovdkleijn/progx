@@ -5,5 +5,7 @@ class Bedrijf extends Eloquent {
 
 	public static $key = 'idbedrijf';
 
+	public static $table = "bedrijven";
+
 	
 }

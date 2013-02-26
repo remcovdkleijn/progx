@@ -3,49 +3,24 @@
 Route::get('/', array('as' => 'index', 'uses' => 'home@index'));
 
 // user Resource
-Route::get('login', array('as' => 'login', 'uses' => 'users@index')); // form login
-Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show')); // profile not niet gemaakt
-Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new')); // form register
-Route::get('users/edit', array('as' => 'edit_user', 'uses' => 'users@edit')); // form edit
-Route::post('users', 'users@create'); // POST register
-Route::put('users/edit', 'users@update'); // POST/PUT update
-Route::delete('users/(:any)', 'users@destroy'); // niet gerbuikt
-Route::post('login', array('as' => 'login_post', 'uses' => 'users@login')); // POST login
-Route::get('logout', array('as' => 'logout', 'before' => 'auth', 'uses' => 'users@logout')); // lohout
+Route::get('login', array('as' => 'login', 'uses' => 'users@index')); 									// form login
+Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show')); 								// eventueel profile pagina ~
+Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new')); 								// form register
+Route::get('users/edit', array('as' => 'edit_user', 'before' => 'authuser', 'uses' => 'users@edit')); 	// form edit
+Route::post('users', 'users@create'); 																	// POST register
+Route::put('users/edit', array('before' => 'authuser', 'uses' => 'users@update')); 						// POST/PUT update
+Route::delete('users/(:any)', 'users@destroy'); 														// niet gebruikt ~
+Route::post('login', array('as' => 'login_post', 'uses' => 'users@login')); 							// POST login
+Route::get('logout', array('as' => 'logout', 'before' => 'authuser', 'uses' => 'users@logout')); 		// logout
 
-Route::get('admin', array('as' => 'admin', 'before' => 'auth', function(){
-	$user = Auth::user();
-	return View::make('home.admin', array('name' => $user->name));
-}));
-
-// Route::get('/', function(){
-
-// 	// $user = User::find(1);
-// 	// $user->password = Hash::make('lollol');
-// 	// $user->save();
-
-// 	$credentials = array(
-// 		'username' => 'remcovdkleijn@gmail.com', //Input::get('email')
-// 		'password' => 'lollol' //Input::get('password')
-// 	);
-
-// 	if(Auth::attempt($credentials)){
-// 		return Redirect::to('admin');
-// 	}
-
-// 	return 'no account';
-// });
-
-// Route::get('login', function(){
-// 	return 'login the user with a form';
-// });
-
-// Route::get('logout', function(){
-// 	Auth::logout();
-// 	//redisrect to login form
-// 	return 'logged out';
-// });
-
+// bedrijf Resource
+Route::get('bedrijf', array('as' => 'bedrijven', 'before' => 'authbedrijf', 'uses' => 'bedrijven@index'));								// show alle bedrijven van user
+Route::get('bedrijf/(:any)', array('as' => 'bedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@show')); 							// show 1 bedrijf
+Route::get('bedrijf/new', array('as' => 'new_bedrijf', 'uses' => 'bedrijven@new')); 													// form new bedrijf
+Route::get('bedrijf/(:any)/edit', array('as' => 'edit_bedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@edit')); 				// form edit
+Route::post('bedrijf', 'bedrijven@create'); 																							// POST register
+Route::put('bedrijf/edit', array('before' => 'authbedrijf', 'uses' => 'bedrijven@update')); 											// POST/PUT update
+Route::get('bedrijf/(:any)/ontkoppel', array('as' => 'ontkoppelbedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@ontkoppel')); 	// ontkoppelen bedrijf van user
 
 
 /*
@@ -116,7 +91,14 @@ Route::filter('csrf', function()
 	if (Request::forged()) return Response::error('500');
 });
 
-Route::filter('auth', function()
+Route::filter('authuser', function()
 {
-	if (Auth::guest()) return Redirect::to('login');
+	if (Auth::guest()){ return Redirect::to_route('login'); }
+	//elseif (Session::has('logintype') && Session::get('logintype') != 'user'){ return Redirect::to_route('index'); }
+});
+
+Route::filter('authbedrijf', function()
+{
+	if (Auth::guest()){ return Redirect::to_route('login'); }
+	elseif (Session::has('logintype') && Session::get('logintype') != 'bedrijf'){ return Redirect::to_route('index'); }
 });
