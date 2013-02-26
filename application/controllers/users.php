@@ -144,7 +144,7 @@ class Users_Controller extends Base_Controller {
 				} else {
 					Session::put('logintype', 'bedrijf');
 				}
-				return Redirect::to_route('admin');
+				return Redirect::to_route('index');
 			}
 			return Redirect::to_route('login')->with('loginfail', 'true');
     	}
