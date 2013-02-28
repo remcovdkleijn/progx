@@ -4,6 +4,21 @@ class Bedrijven_Controller extends Base_Controller {
 
 	public $restful = true;
 
+	public $form_rules = array(
+		'bedrijfsnaam' => 'required',
+		'kvk' => 'required',
+		'adres' => 'required',
+		'postcode' => 'required',
+		'city' => 'required',
+		'land' => 'required'
+	);
+
+
+	public $form_messages = array(
+		'required' => 'The :attribute field is required.',
+		'unique' => 'The :attribute field already exists.'
+	);
+
 	public function get_index(){
 
 		$user = Auth::user();
@@ -14,30 +29,11 @@ class Bedrijven_Controller extends Base_Controller {
 
 	public function post_create(){
 
-		$rules = array(
-			'bedrijfsnaam' => 'required',
-			'kvk' => 'required',
-			'email' => 'required|unique:users,email|email',
-			'password' => 'required|min:6|confirmed',
-			'password_confirmation' => 'required|required_with:first_name',
-			'adres' => 'required',
-			'postcode' => 'required',
-			'city' => 'required',
-			'land' => 'required'
-		);
-
-		$messages = array(
-			'required' => 'The :attribute field is required.',
-			'unique' => 'The :attribute field already exists.'
-		);
-
-		$validation = Validator::make(Input::all(), $rules, $messages);
+		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
 
 		$values = array(
 			'bedrijfsnaam' => Input::get('bedrijfsnaam'),
 			'kvk' => Input::get('kvk'),
-    		'email' => Input::get('email'),
-    		'password' => Hash::make(Input::get('password')),
     		'adres' => Input::get('adres'),
     		'postcode' => Input::get('postcode'),
     		'city' => Input::get('city'),
@@ -45,13 +41,12 @@ class Bedrijven_Controller extends Base_Controller {
     	);
 
 		if ($validation->fails()) {
-			unset($values['password']);
         	return Redirect::to_route('new_bedrijf')->with('form_values', $values)->with_errors($validation);
     	} else {
     		
     		$bedrijf = Bedrijf::create($values);
     		if($bedrijf){
-    			return Redirect::to_route('index')->with('message', 'your business account had been created');
+    			return Redirect::to_route('index')->with('message', 'het bedrijf is aangemaakt');
     		} else {
     			return 'database error';
     		}
@@ -77,24 +72,9 @@ class Bedrijven_Controller extends Base_Controller {
 		return View::make('bedrijf.new');
 	}
 
-	public function put_update(){
+	public function put_update($index){
 
-		$idbedrijf = Input::get('idbedrijf');
-
-		$rules = array(
-			'bedrijfsnaam' => 'required',
-			'kvk' => 'required',
-			'adres' => 'required',
-			'postcode' => 'required',
-			'city' => 'required',
-			'land' => 'required'	
-		);
-
-		$messages = array(
-			'required' => 'The :attribute field is required.'
-		);
-
-		$validation = Validator::make(Input::all(), $rules, $messages);
+		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
 
 		$values = array(
 			'bedrijfsnaam' => Input::get('bedrijfsnaam'),
@@ -106,13 +86,13 @@ class Bedrijven_Controller extends Base_Controller {
     	);
 
 		if ($validation->fails()) {
-			return Redirect::to_route('edit_bedrijf', $idbedrijf)->with('form_values', $values)->with_errors($validation);
+			return Redirect::to_route('edit_bedrijf', $index)->with('form_values', $values)->with_errors($validation);
     	} else {
     		$user = Auth::user();
-			$bedrijf = $user->bedrijven()->find($idbedrijf);
+			$bedrijf = $user->bedrijven()->find($index);
 			$bedrijf->fill($values);
 			$bedrijf->save();
-			return Redirect::to_route('edit_bedrijf', $idbedrijf)->with('message', 'your account had been edited');
+			return Redirect::to_route('bedrijven', $index)->with('message', 'your account had been edited');
     	}
 
 	}

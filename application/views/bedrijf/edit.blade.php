@@ -5,15 +5,13 @@
 @endsection
 
 @section('container')
-	<h2>Registreren</h2>
+	<h2>Edit bedrijf</h2>
 
 	@if (Session::has('message'))
 		<p>{{ Session::get('message') }}</p>
 	@endif
 
-	{{ Form::open('bedrijf/edit', 'PUT') }}
-
-		{{ Form::hidden('idbedrijf', $bedrijf->idbedrijf)}}
+	{{ Form::open('bedrijf/' . $bedrijf->idbedrijf, 'PUT') }}
 
 		{{ Form::label('bedrijfsnaam', 'Bedrijfsnaam') }}
 		@if(Session::has('form_values'))

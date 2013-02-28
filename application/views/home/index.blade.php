@@ -6,13 +6,13 @@
 
 @section('container')
 
-	{{ Session::get('logintype') }}
-
 	@if (Session::has('message'))
 		<p>{{ Session::get('message') }}</p>
 	@endif
 
 	<p>Dit is de maincontainer<p>
+
+	<a href="{{ URL::to_route('all_producten') }}">Alle producten</a>
 	
 @endsection
 

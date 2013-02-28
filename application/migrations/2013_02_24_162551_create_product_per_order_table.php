@@ -4,10 +4,14 @@ class Create_Product_Per_Order_Table {
 
 	public function up()
     {
-		Schema::create('product_perorder', function($table) {
-			$table->integer('idorder');
-			$table->integer('idproduct');
+		Schema::create('product_per_order', function($table) {
+			$table->increments('id');
+			$table->integer('order_id')->unsigned();
+			$table->integer('product_id')->unsigned();
 			//$table->timestamps();
+
+			$table->foreign('order_id')->references('idorder')->on('orders');
+			$table->foreign('product_id')->references('idproduct')->on('producten');
 		});
 
     }    

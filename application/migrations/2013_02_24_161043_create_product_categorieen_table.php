@@ -6,6 +6,7 @@ class Create_Product_Categorieen_Table {
     {
 		Schema::create('product_categorieen', function($table) {
 			$table->increments('idproduct_categorie');
+			$table->string('categorie');
 			//$table->timestamps();
 		});
 

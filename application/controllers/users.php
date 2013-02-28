@@ -139,10 +139,15 @@ class Users_Controller extends Base_Controller {
 				
 				$user = Auth::user();
 				$bedrijven = $user->bedrijven()->get();
+
 				if(empty($bedrijven)){
 					Session::put('logintype', 'user');
 				} else {
+					foreach ($bedrijven as $key => $value) {
+						$bedrijven_array[] = $value->idbedrijf;
+					}
 					Session::put('logintype', 'bedrijf');
+					Session::put('businessids', $bedrijven_array);
 				}
 				return Redirect::to_route('index');
 			}

@@ -8,7 +8,7 @@ class Create_Users_Table {
 			$table->increments('iduser');
 			$table->string('voornaam');
 			$table->string('achternaam');
-			$table->string('email');
+			$table->string('email')->unique();
 			$table->string('password');
 			$table->string('adres');
 			$table->string('postcode');

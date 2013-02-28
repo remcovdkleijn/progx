@@ -7,5 +7,9 @@ class Bedrijf extends Eloquent {
 
 	public static $table = "bedrijven";
 
+	public function producten(){
+		return $this->has_many('product', 'idproduct');
+	}
+
 	
 }

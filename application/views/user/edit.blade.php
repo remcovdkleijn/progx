@@ -11,7 +11,7 @@
 		<p>{{ Session::get('message') }}</p>
 	@endif
 
-	{{ Form::open('users/edit', 'PUT') }}
+	{{ Form::open('users', 'PUT') }}
 
 		<p> Your email address: {{ $userdata->email }} </p>
 

@@ -6,8 +6,10 @@ class Create_Orders_Table {
     {
 		Schema::create('orders', function($table) {
 			$table->increments('idorder');
-			$table->integer('iduser');
+			$table->integer('iduser')->unsigned();
 			//$table->timestamps();
+
+			$table->foreign('iduser')->references('iduser')->on('users');
 		});
 
     }    

@@ -1,4 +1,4 @@
-36<?php
+<?php
 
 class Create_Transacties_Table {    
 
@@ -6,9 +6,12 @@ class Create_Transacties_Table {
     {
 		Schema::create('transacties', function($table) {
 			$table->increments('idtransactie');
-			$table->integer('iduser');
-			$table->integer('idtransactie_type');
+			$table->integer('iduser')->unsigned();
+			$table->integer('idtransactie_type')->unsigned();
 			//$table->timestamps();
+
+			$table->foreign('idtransactie_type')->references('idtransactie_type')->on('transactie_types');
+			$table->foreign('iduser')->references('iduser')->on('users');
 		});
 
     }    

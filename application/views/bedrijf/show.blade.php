@@ -5,7 +5,11 @@
 @endsection
 
 @section('container')
-	<h2>Alle bedrijven</h2>
+	<h2>bedrijfsgegevens</h2>
+
+	@if (Session::has('message'))
+		<p>{{ Session::get('message') }}</p>
+	@endif
 
 	@foreach ($bedrijf->attributes as $key => $attribute)
 		@if ($key != 'idbedrijf')

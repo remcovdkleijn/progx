@@ -6,9 +6,16 @@ class Create_Producten_Table {
     {
 		Schema::create('producten', function($table) {
 			$table->increments('idproduct');
-			$table->integer('idproduct_categorie');
-			$table->integer('idbedrijf');
-			//$table->timestamps();
+			$table->integer('idproduct_categorie')->unsigned();
+			$table->integer('idbedrijf')->unsigned();
+			$table->string('naam');
+			$table->string('omschrijving');
+			$table->string('hoeveelheid');
+			$table->string('prijs');
+			$table->timestamps();
+
+			$table->foreign('idproduct_categorie')->references('idproduct_categorie')->on('product_categorieen');
+			$table->foreign('idbedrijf')->references('idbedrijf')->on('bedrijven');
 		});
 
     }    
