@@ -57,6 +57,9 @@ class Bedrijven_Controller extends Base_Controller {
 	public function get_show($index){
 		$user = Auth::user();
 		$bedrijf = $user->bedrijven()->find($index);
+		if(is_null($bedrijf)){
+			return Redirect::to_route('index');
+		}
 
 		return View::make('bedrijf.show', array('bedrijf' => $bedrijf));
 	}
@@ -64,6 +67,9 @@ class Bedrijven_Controller extends Base_Controller {
 	public function get_edit($index){
 		$user = Auth::user();
 		$bedrijf = $user->bedrijven()->find($index);
+		if(is_null($bedrijf)){
+			return Redirect::to_route('index');
+		}
 
 		return View::make('bedrijf.edit', array('bedrijf' => $bedrijf));
 	}
@@ -100,7 +106,20 @@ class Bedrijven_Controller extends Base_Controller {
 	public function get_ontkoppel($index){
 		$user = Auth::user();
 		$bedrijf = $user->bedrijven()->detach($index);
-		return Redirect::to_route('bedrijven')->with('message', 'the business has been detach from your arrount');
+		if($bedrijf == 0){
+			return Redirect::to_route('index');
+		} else {
+			$temp = Session::get('businessids');
+			unset($temp[array_search($index, $temp)]);
+			
+			if(count($temp) == 0){
+				Session::forget('businessids');
+				Session::put('logintype', 'user');
+				return Redirect::to_route('index')->with('message', 'the business has been detach from your arrount');
+			}
+			Session::put('businessids', $temp);
+			return Redirect::to_route('bedrijven')->with('message', 'the business has been detach from your arrount');
+		}
 	}
 
 }

@@ -14,8 +14,13 @@
 	@forelse ($producten as $product)
 		<p>Naam: {{ $product->naam }}</p>
 		<p>Categorie: {{ $product->productcategorie->categorie }}</p>
+		@forelse ($product->aanbiedingen as $aanbieding)
+			<p>Actienaam: {{ $aanbieding->actienaam }}, {{ $aanbieding->korting }}% korting. <a href="{{ URL::to_route('aanbieding', $aanbieding->idaanbieding) }}">Bekijk actie</a></p>
+		@empty
+			<p>Er zijn geen aanbiedingen voor dit product</p>
+		@endforelse
 
-		<a href="{{URL::to_route('product', $product->idproduct) }}">show</a> <a href="{{URL::to_route('del_product', $product->idproduct) }}">delete</a></p>
+		<a href="{{URL::to_route('product', $product->idproduct) }}">show</a>
 
 		<hr />
 	@empty

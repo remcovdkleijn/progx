@@ -15,5 +15,9 @@ class Product extends Eloquent {
 		return $this->belongs_to('Bedrijf', 'idbedrijf');
 	}
 
+	public function aanbiedingen(){
+         return $this->has_many_and_belongs_to('Aanbieding', 'product_per_aanbieding');
+    }
+
 	
 }

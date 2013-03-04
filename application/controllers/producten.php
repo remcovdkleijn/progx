@@ -18,19 +18,19 @@ class Producten_Controller extends Base_Controller {
 		'not_in' => 'Please select a :attribute'
 	);
 
-	public function get_all(){
-		$producten = Product::with(array('productcategorie', 'bedrijf'))->get();
+	public function get_all(){ // aanbiedingen weergeven
+		$producten = Product::with(array('productcategorie', 'bedrijf', 'aanbiedingen'))->get();
 		return View::make('product.all', array('producten' => $producten));
 	}
 
-	public function get_index($index){
+	public function get_index($index){ // aanbiedingen weergeven
 		// alle producten laten zien
 
 		if(!$this->check_business_auth($index)){ return Redirect::to_route('index'); }
 
 		$bedrijf = Bedrijf::where('idbedrijf', '=', $index)->first();
 
-		$producten = Product::with('productcategorie')->where('idbedrijf', '=', $index);
+		$producten = Product::with(array('productcategorie', 'aanbiedingen'))->where('idbedrijf', '=', $index);
 
 		if(is_null($producten)){
 			$producten = array();
@@ -77,9 +77,12 @@ class Producten_Controller extends Base_Controller {
     	}
 	}
 
-	public function get_show($index){
+	public function get_show($index){ // aanbiedingen weergeven
 		// show 1 product
-		$product = Product::with(array('productcategorie', 'bedrijf'))->where('idproduct', '=', $index)->first();
+		$product = Product::with(array('productcategorie', 'bedrijf', 'aanbiedingen'))->where('idproduct', '=', $index)->first();
+		if(is_null($product)){
+			return Redirect::to_route('index');
+		}
 
 		$get = $this->check_business_auth($product->bedrijf->idbedrijf);
 
@@ -89,6 +92,9 @@ class Producten_Controller extends Base_Controller {
 	public function get_edit($index){
 		// form edit product
 		$product = Product::with('productcategorie')->where('idproduct', '=', $index)->first();
+		if(is_null($product)){
+			return Redirect::to_route('index');
+		}
 
 		if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
 
@@ -154,8 +160,18 @@ class Producten_Controller extends Base_Controller {
 
 	public function get_destroy($index){
 		// delete product
-		$product = Product::find($index);
+		$product = Product::with('aanbiedingen')->where('idproduct', '=', $index)->first();
+		if(is_null($product)){
+			return Redirect::to_route('index');
+		}
 		if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
+
+		//dd(count($product->aanbiedingen));
+
+		if(count($product->aanbiedingen) != 0){
+			return Redirect::to_route('product', $product->idproduct)->with('message', 'het product kan niet verwijderd worden omdat er nog aanbiedingen zijn van dit product');
+		}
+
 		$product->delete();
 		return Redirect::to_route('bedrijven')->with('message', 'the product had been deleted');
 	}

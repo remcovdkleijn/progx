@@ -18,6 +18,8 @@
 			<a href="{{URL::to_route('ontkoppelbedrijf', $bedrijf->idbedrijf) }}">ontkoppelen</a>
 			<a href="{{URL::to_route('new_product', $bedrijf->idbedrijf) }}">new product</a>
 			<a href="{{URL::to_route('producten', $bedrijf->idbedrijf) }}">show producten</a>
+			<a href="{{URL::to_route('new_aanbieding', $bedrijf->idbedrijf)}}">new aanbieding</a>
+			<a href="{{URL::to_route('aanbiedingen', $bedrijf->idbedrijf)}}">show aanbiedingen</a>
 		</p>
 	@empty
 		<p>Er zijn geen bedrijven</p>

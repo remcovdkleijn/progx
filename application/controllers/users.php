@@ -151,7 +151,8 @@ class Users_Controller extends Base_Controller {
 				}
 				return Redirect::to_route('index');
 			}
-			return Redirect::to_route('login')->with('loginfail', 'true');
+			Session::flash('message', 'email and password combination is not correct');
+			return Redirect::to_route('login')->with('form_values', array('email' => Input::get('email')));
     	}
 	}
 
