@@ -1,6 +1,6 @@
 <?php
 
-class Create_Product_Per_Order_Table {    
+class Create_Product_Per_Order_Table {
 
 	public function up()
     {
@@ -14,12 +14,10 @@ class Create_Product_Per_Order_Table {
 			$table->foreign('product_id')->references('idproduct')->on('producten');
 		});
 
-    }    
-
-	public function down()
-    {
-		Schema::drop('order');
-
     }
 
+	public function down()
+	{
+		Schema::drop('product_per_order');
+	}
 }

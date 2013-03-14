@@ -1,6 +1,6 @@
 <?php
 
-class Create_Product_Categorieen_Table {    
+class Create_Product_Categorieen_Table {
 
 	public function up()
     {
@@ -10,11 +10,11 @@ class Create_Product_Categorieen_Table {
 			//$table->timestamps();
 		});
 
-    }    
+    }
 
 	public function down()
     {
-		Schema::drop('categorieen');
+		Schema::drop('product_categorieen');
 
     }
 

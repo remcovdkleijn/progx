@@ -1,6 +1,6 @@
 <?php
 
-class Create_Transacties_Table {    
+class Create_Transacties_Table {
 
 	public function up()
     {
@@ -14,11 +14,11 @@ class Create_Transacties_Table {
 			$table->foreign('iduser')->references('iduser')->on('users');
 		});
 
-    }    
+    }
 
 	public function down()
     {
-		Schema::drop('transactions');
+		Schema::drop('transacties');
 
     }
 

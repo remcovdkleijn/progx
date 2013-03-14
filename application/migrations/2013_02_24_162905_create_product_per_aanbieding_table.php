@@ -1,6 +1,6 @@
 <?php
 
-class Create_Product_Per_Aanbieding_Table {    
+class Create_Product_Per_Aanbieding_Table {
 
 	public function up()
     {
@@ -11,15 +11,14 @@ class Create_Product_Per_Aanbieding_Table {
 			//$table->timestamps();
 
 			$table->foreign('product_id')->references('idproduct')->on('producten');
-			$table->foreign('aanbieding_id')->references('idaanbieding')->on('aandiedingen');
+			$table->foreign('aanbieding_id')->references('idaanbieding')->on('aanbiedingen');
 		});
 
-    }    
+    }
 
 	public function down()
-    {
-		Schema::drop('aanbieding');
-
-    }
+	{
+		Schema::drop('product_per_aanbieding');
+	}
 
 }

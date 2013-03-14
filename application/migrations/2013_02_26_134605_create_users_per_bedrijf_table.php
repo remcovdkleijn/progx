@@ -1,6 +1,6 @@
 <?php
 
-class Create_Users_Per_Bedrijf_Table {    
+class Create_Users_Per_Bedrijf_Table {
 
 	public function up()
     {
@@ -17,9 +17,8 @@ class Create_Users_Per_Bedrijf_Table {
     }
 
 	public function down()
-    {
-		Schema::drop('bedrijf');
-
-    }
+	{
+		Schema::drop('users_per_bedrijf');
+	}
 
 }

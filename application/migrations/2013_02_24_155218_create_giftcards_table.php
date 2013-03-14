@@ -1,6 +1,6 @@
 <?php
 
-class Create_Giftcards_Table {    
+class Create_Giftcards_Table {
 
 	public function up()
     {
@@ -12,11 +12,11 @@ class Create_Giftcards_Table {
 			$table->foreign('iduser')->references('iduser')->on('users');
 		});
 
-    }    
+    }
 
 	public function down()
     {
-		Schema::drop('kortingsbonnen');
+		Schema::drop('giftcards');
 
     }
 

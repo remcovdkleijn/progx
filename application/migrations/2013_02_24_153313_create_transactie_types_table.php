@@ -1,6 +1,6 @@
 <?php
 
-class Create_Transactie_Types_Table {    
+class Create_Transactie_Types_Table {
 
 	public function up()
     {
@@ -9,11 +9,11 @@ class Create_Transactie_Types_Table {
 			//$table->timestamps();
 		});
 
-    }    
+    }
 
 	public function down()
     {
-		Schema::drop('type');
+		Schema::drop('transactie_types');
 
     }
 

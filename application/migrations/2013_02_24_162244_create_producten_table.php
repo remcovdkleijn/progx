@@ -1,6 +1,6 @@
 <?php
 
-class Create_Producten_Table {    
+class Create_Producten_Table {
 
 	public function up()
     {
@@ -18,12 +18,11 @@ class Create_Producten_Table {
 			$table->foreign('idbedrijf')->references('idbedrijf')->on('bedrijven');
 		});
 
-    }    
+    }
 
 	public function down()
-    {
+	{
 		Schema::drop('producten');
-
-    }
+	}
 
 }
