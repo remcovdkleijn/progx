@@ -42,7 +42,7 @@
 		</div>
 
 		<footer id="footer">
-			&copy; Remco, Niels & Rob - PROGX {{ date('Y') }}
+			&copy; Remco, Niels &amp Rob - PROGX {{ date('Y') }}
 		</footer>
 	</div>
 </body>
