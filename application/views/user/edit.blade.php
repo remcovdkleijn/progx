@@ -8,7 +8,7 @@
 		<p> Jouw e-mailadres: {{ $userdata->email }} </p>
 
 		<p>
-			{{ Form::label('voornaam', 'Voornaam') }}
+			{{ Form::label('voornaam', 'Voornaam:') }}
 			@if(Session::has('form_values'))
 				{{ Form::text('voornaam', Session::get('form_values')['voornaam']) }}
 			@else
@@ -18,7 +18,7 @@
 		</p>
 
 		<p>
-			{{ Form::label('achternaam', 'Achternaam') }}
+			{{ Form::label('achternaam', 'Achternaam:') }}
 			@if(Session::has('form_values'))
 				{{ Form::text('achternaam', Session::get('form_values')['achternaam']) }}
 			@else
@@ -28,7 +28,7 @@
 		</p>
 
 		<p>
-			{{ Form::label('adres', 'Adres') }}
+			{{ Form::label('adres', 'Adres:') }}
 			@if(Session::has('form_values'))
 				{{ Form::text('adres', Session::get('form_values')['adres']) }}
 			@else
@@ -38,7 +38,7 @@
 		</p>
 
 		<p>
-			{{ Form::label('postcode', 'Postcode') }}
+			{{ Form::label('postcode', 'Postcode:') }}
 			@if(Session::has('form_values'))
 				{{ Form::text('postcode', Session::get('form_values')['postcode']) }}
 			@else
@@ -48,7 +48,7 @@
 		</p>
 
 		<p>
-			{{ Form::label('city', 'Woonplaats') }}
+			{{ Form::label('city', 'Woonplaats:') }}
 			@if(Session::has('form_values'))
 				{{ Form::text('city', Session::get('form_values')['city']) }}
 			@else
@@ -58,7 +58,7 @@
 		</p>
 
 		<p>
-			{{ Form::label('land', 'Land') }}
+			{{ Form::label('land', 'Land:') }}
 			@if(Session::has('form_values'))
 				{{ Form::text('land', Session::get('form_values')['land']) }}
 			@else
