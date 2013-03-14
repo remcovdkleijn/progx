@@ -24,7 +24,7 @@
 				@else
 					<li>{{ HTML::link_to_route('edit_user', 'Profile') }}</li>
 					<li>{{ HTML::link_to_route('logout', 'Logout') }}</li>
-					@if (Auth::user() -> bedrijven -> has)
+					@if (count(Auth::user() -> bedrijven) > 0)
 						<li>{{ HTML::link_to_route('bedrijven', 'Mijn bedrijven') }}</li>
 					@endif
 				@endif
@@ -42,7 +42,7 @@
 		</div>
 
 		<footer id="footer">
-			&copy; Remco & Rob - PROGX {{ date('Y') }}
+			&copy; Remco, Niels & Rob - PROGX {{ date('Y') }}
 		</footer>
 	</div>
 </body>
