@@ -1,15 +1,7 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Edit bedrijf</h2>
-
-	@if (Session::has('message'))
-		<p>{{ Session::get('message') }}</p>
-	@endif
 
 	{{ Form::open('bedrijf/' . $bedrijf->idbedrijf, 'PUT') }}
 
@@ -70,8 +62,4 @@
 		{{ Form::submit('save') }}
 	{{ Form::close() }}
 
-@endsection
-
-@section('footer')
-	@include('footer')
 @endsection

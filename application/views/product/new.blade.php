@@ -1,10 +1,6 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Registreren Bedrijven</h2>
 
 	{{ Form::open('producten') }}
@@ -40,8 +36,4 @@
 		{{ Form::submit('save') }}
 	{{ Form::close() }}
 
-@endsection
-
-@section('footer')
-	@include('footer')
 @endsection

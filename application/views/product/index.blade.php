@@ -1,15 +1,7 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Alle Producten van bedrijf {{$bedrijf->bedrijfsnaam}}</h2>
-
-	@if (Session::has('message'))
-		<p>{{ Session::get('message') }}</p>
-	@endif
 
 	@forelse ($producten as $product)
 		<p>Naam: {{ $product->naam }}</p>
@@ -28,8 +20,4 @@
 		<a href="{{ URL::to_route('new_product', $bedrijf->idbedrijf) }}">New Product</a>
 	@endforelse
 
-@endsection
-
-@section('footer')
-	@include('footer')
 @endsection

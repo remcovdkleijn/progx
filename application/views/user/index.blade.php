@@ -1,16 +1,9 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Login</h2>
 
 	{{ $errors->first('password', '<p>:message</p>') }}
-	@if (Session::has('message'))
-		<p>{{ Session::get('message') }}</p>
-	@endif
 
 	{{ Form::open('login') }}
 
@@ -28,8 +21,4 @@
 		{{ Form::submit('save') }}
 	{{ Form::close() }}
 
-@endsection
-
-@section('footer')
-	@include('footer')
 @endsection

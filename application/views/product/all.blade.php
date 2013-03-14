@@ -1,15 +1,7 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Alle Producten</h2>
-
-	@if (Session::has('message'))
-		<p>{{ Session::get('message') }}</p>
-	@endif
 
 	@forelse ($producten as $product)
 		<p>Naam: {{ $product->naam }}</p>
@@ -30,8 +22,4 @@
 		<p>Er zijn geen producten</p>
 	@endforelse
 
-@endsection
-
-@section('footer')
-	@include('footer')
 @endsection

@@ -1,20 +1,12 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Aanbieding</h2>
-
-	@if (Session::has('message'))
-		<p>{{ Session::get('message') }}</p>
-	@endif
 
 	<p>Actienaam = {{ $aanbieding->actienaam }}</p>
 	<p>Omschrijving = {{ $aanbieding->omschrijving }}</p>
 	<p>Korting = {{ $aanbieding->korting }}%</p>
-	<p>Actief = 
+	<p>Actief =
 		@if ($aanbieding->actief == 1)
 			ja
 		@else
@@ -41,10 +33,6 @@
 		<a href="{{ URL::to_route('edit_aanbieding', $aanbieding->idaanbieding) }}">edit aanbieding</a>
 		<a href="{{ URL::to_route('del_aanbieding', $aanbieding->idaanbieding) }}">delete aanbieding</a>
 	@endif
-	
 
-@endsection
 
-@section('footer')
-	@include('footer')
 @endsection

@@ -1,15 +1,7 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Product gegevens</h2>
-
-	@if (Session::has('message'))
-		<p>{{ Session::get('message') }}</p>
-	@endif
 
 	<p>Naam: {{ $product->naam }}</p>
 	<p>Omschrijving: {{ $product->omschrijving }}</p>
@@ -30,8 +22,4 @@
 		<a href="{{URL::to_route('del_product', $product->idproduct) }}">delete</a>
 	@endif
 
-@endsection
-
-@section('footer')
-	@include('footer')
 @endsection

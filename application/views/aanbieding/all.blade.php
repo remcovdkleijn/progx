@@ -1,15 +1,7 @@
-@layout('master')
+@layout('layouts.default')
 
-@section('header')
-	@include('header')
-@endsection
-
-@section('container')
+@section('content')
 	<h2>Alle aanbiedingen</h2>
-
-	@if (Session::has('message'))
-		<p>{{ Session::get('message') }}</p>
-	@endif
 
 	@forelse ($aanbiedingen as $aanbieding)
 
@@ -40,8 +32,4 @@
 		<p>Er zijn geen aanbiedingen</p>
 	@endforelse
 
-@endsection
-
-@section('footer')
-	@include('footer')
 @endsection
