@@ -22,7 +22,7 @@
 				<li>{{ HTML::link_to_route('new_user', 'Registreren') }}</li>
 				<li>{{ HTML::link_to_route('login', 'Inloggen') }}</li>
 				@else
-					<li>{{ HTML::link_to_route('edit_user', 'Mijn Profiel') }}</li>
+					<li>{{ HTML::link_to_route('edit_user', 'Mijn profiel') }}</li>
 					<li>{{ HTML::link_to_route('logout', 'Uitloggen') }}</li>
 					@if (count(Auth::user() -> bedrijven) > 0)
 						<li>{{ HTML::link_to_route('bedrijven', 'Mijn bedrijven') }}</li>
@@ -42,7 +42,7 @@
 		</div>
 
 		<footer id="footer">
-			&copy; Remco, Niels &amp Rob - PROGX {{ date('Y') }}
+			&copy; Remco, Niels &amp; Rob - PROGX {{ date('Y') }}
 		</footer>
 	</div>
 </body>

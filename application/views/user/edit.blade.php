@@ -1,7 +1,7 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Mijn Gegevens</h2>
+	<h2>Mijn gegevens</h2>
 
 	{{ Form::open('users', 'PUT') }}
 
