@@ -9,16 +9,18 @@
 
 		{{ Form::token() }}
 
-		{{ Form::label('email', 'E-Mail Address') }}
-		{{ Form::text('email', Session::get('form_values')['email']) }}
-		{{ $errors->first('email', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('email', 'E-mailadres:') }}
+			{{ Form::text('email', Session::get('form_values')['email']) }}
+			{{ $errors->first('email', '<p>:message</p>') }}
+		</p>
 
-		{{ Form::label('password', 'Password') }}
-		{{ Form::password('password') }}
-		<br />
+		<p>
+			{{ Form::label('password', 'Wachtwoord:') }}
+			{{ Form::password('password') }}
+		</p>
 
-		{{ Form::submit('save') }}
+		{{ Form::submit('Aanmelden') }}
 	{{ Form::close() }}
 
 @endsection
