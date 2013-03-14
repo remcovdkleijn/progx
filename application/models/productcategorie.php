@@ -1,6 +1,6 @@
 <?php
 
-class Productcategorie extends Eloquent {
+class Productcategorie extends Basemodel {
 	public static $timestamps = false;
 
 	public static $key = 'idproduct_categorie';
@@ -11,5 +11,5 @@ class Productcategorie extends Eloquent {
 		return $this->has_many('product', 'idproduct');
 	}
 
-	
+
 }

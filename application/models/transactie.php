@@ -1,9 +1,9 @@
 <?php
 
-class Transactie extends Eloquent {
+class Transactie extends Basemodel {
 	public static $timestamps = false;
 
 	public static $key = 'idtransacties';
 
-	
+
 }

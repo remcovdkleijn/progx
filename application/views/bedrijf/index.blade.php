@@ -13,8 +13,8 @@
 
 	@forelse ($bedrijven as $bedrijf)
 		<p>
-			{{ $bedrijf->bedrijfsnaam }} 
-			<a href="{{URL::to_route('bedrijf', $bedrijf->idbedrijf) }}">show</a> 
+			{{ $bedrijf->bedrijfsnaam }}
+			<a href="{{URL::to_route('bedrijf', $bedrijf->idbedrijf) }}">show</a>
 			<a href="{{URL::to_route('ontkoppelbedrijf', $bedrijf->idbedrijf) }}">ontkoppelen</a>
 			<a href="{{URL::to_route('new_product', $bedrijf->idbedrijf) }}">new product</a>
 			<a href="{{URL::to_route('producten', $bedrijf->idbedrijf) }}">show producten</a>

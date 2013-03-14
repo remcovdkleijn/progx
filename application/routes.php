@@ -3,44 +3,45 @@
 Route::get('/', array('as' => 'index', 'uses' => 'home@index'));
 
 // user Resource
-Route::get('login', array('as' => 'login', 'uses' => 'users@index')); 									// form login
-Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show')); 								// eventueel profile pagina ~
-Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new')); 								// form register
+Route::get('login', array('as' => 'login', 'uses' => 'users@index'));																		// form login
+Route::get('logout', array('as' => 'logout', 'before' => 'authuser', 'uses' => 'users@logout')); 				// logout
+Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show'));															// eventueel profile pagina ~
+Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new')); 															// form register
 Route::get('users/edit', array('as' => 'edit_user', 'before' => 'authuser', 'uses' => 'users@edit')); 	// form edit
-Route::post('users', 'users@create'); 																	// POST register
-Route::put('users', array('before' => 'authuser', 'uses' => 'users@update')); 							// POST/PUT update
-Route::delete('users/(:any)', 'users@destroy'); 														// niet gebruikt ~
-Route::post('login', array('as' => 'login_post', 'uses' => 'users@login')); 							// POST login
-Route::get('logout', array('as' => 'logout', 'before' => 'authuser', 'uses' => 'users@logout')); 		// logout
+Route::post('users', 'users@create');																																		// POST register
+Route::post('login', array('before' => 'csrf', 'as' => 'login_post', 'uses' => 'users@login'));															// POST login
+Route::put('users', array('before' => 'authuser', 'uses' => 'users@update')); 													// POST/PUT update
+Route::delete('users/(:any)', 'users@destroy'); 																												// niet gebruikt ~
 
 // bedrijf Resource
-Route::get('bedrijf', array('as' => 'bedrijven', 'before' => 'authbedrijf', 'uses' => 'bedrijven@index'));								// show alle bedrijven van user
-Route::get('bedrijf/(:any)', array('as' => 'bedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@show')); 							// show 1 bedrijf
-Route::get('bedrijf/new', array('as' => 'new_bedrijf', 'uses' => 'bedrijven@new')); 													// form new bedrijf
-Route::get('bedrijf/(:any)/edit', array('as' => 'edit_bedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@edit')); 				// form edit
-Route::post('bedrijf', 'bedrijven@create'); 																							// POST register
-Route::put('bedrijf/(:any)', array('before' => 'authbedrijf', 'uses' => 'bedrijven@update')); 											// POST/PUT update
+Route::get('bedrijf', array('as' => 'bedrijven', 'before' => 'authbedrijf', 'uses' => 'bedrijven@index'));															// show alle bedrijven van user
+Route::get('bedrijf/(:any)', array('as' => 'bedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@show')); 													// show 1 bedrijf
+Route::get('bedrijf/new', array('as' => 'new_bedrijf', 'uses' => 'bedrijven@new')); 																										// form new bedrijf
+Route::get('bedrijf/(:any)/edit', array('as' => 'edit_bedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@edit')); 								// form edit
 Route::get('bedrijf/(:any)/ontkoppel', array('as' => 'ontkoppelbedrijf', 'before' => 'authbedrijf', 'uses' => 'bedrijven@ontkoppel')); 	// ontkoppelen bedrijf van user
+Route::post('bedrijf', 'bedrijven@create'); 																																														// POST register
+Route::put('bedrijf/(:any)', array('before' => 'authbedrijf', 'uses' => 'bedrijven@update')); 																					// POST/PUT update
 
 // product Resource
-Route::get('producten', array('as' => 'all_producten', 'uses' => 'producten@all'));												
-Route::get('producten/(:any)', array('as' => 'producten', 'before' => 'authbedrijf', 'uses' => 'producten@index')); 			// any = idbedrijf
-Route::get('producten/show/(:any)', array('as' => 'product', 'uses' => 'producten@show'));										// any = idproduct
-Route::get('producten/new/(:any)', array('as' => 'new_product', 'before' => 'authbedrijf', 'uses' => 'producten@new'));			// any = idbedrijf
-Route::get('producten/(:any)/edit', array('as' => 'edit_product', 'before' => 'authbedrijf', 'uses' => 'producten@edit')); 		// any = idproduct
-Route::post('producten', array('before' => 'authbedrijf', 'uses' => 'producten@create'));
-Route::put('producten/(:any)', array('before' => 'authbedrijf', 'uses' => 'producten@update'));									// any = idproduct
+Route::get('producten', array('as' => 'all_producten', 'uses' => 'producten@all'));
+Route::get('producten/(:any)', array('as' => 'producten', 'before' => 'authbedrijf', 'uses' => 'producten@index')); 						// any = idbedrijf
+Route::get('producten/show/(:any)', array('as' => 'product', 'uses' => 'producten@show'));																			// any = idproduct
+Route::get('producten/new/(:any)', array('as' => 'new_product', 'before' => 'authbedrijf', 'uses' => 'producten@new'));					// any = idbedrijf
+Route::get('producten/(:any)/edit', array('as' => 'edit_product', 'before' => 'authbedrijf', 'uses' => 'producten@edit')); 			// any = idproduct
 Route::get('producten/(:any)/delete', array('as' => 'del_product', 'before' => 'authbedrijf', 'uses' => 'producten@destroy'));  // any = idproduct
+Route::post('producten', array('before' => 'authbedrijf', 'uses' => 'producten@create'));
+Route::put('producten/(:any)', array('before' => 'authbedrijf', 'uses' => 'producten@update'));																	// any = idproduct
 
 // aanbiedingen Resource
-Route::get('aanbiedingen', array('as' => 'all_aanbiedingen', 'uses' => 'aanbiedingen@all'));										// alle aanbiedingen
-Route::get('aanbiedingen/(:any)', array('as' => 'aanbiedingen', 'before' => 'authbedrijf', 'uses' => 'aanbiedingen@index'));										//id bedrijf
-Route::get('aanbiedingen/show/(:any)', array('as' => 'aanbieding', 'uses' => 'aanbiedingen@show'));										// 1 aanbieding
-Route::get('aanbiedingen/new/(:any)', array('as' => 'new_aanbieding', 'before' => 'authbedrijf', 'uses' => 'aanbiedingen@new'));							// any = idbedrijf; form new aanbieding
-Route::get('aanbiedingen/(:any)/edit', array('as' => 'edit_aanbieding', 'before' => 'authbedrijf', 'uses' => 'aanbiedingen@edit'));								// any = idaanbieding; edit form
-Route::post('aanbiedingen', array('before' => 'authbedrijf', 'uses' => 'aanbiedingen@create'));
-Route::put('aanbiedingen/(:any)', array('before' => 'authbedrijf', 'uses' => 'aanbiedingen@update'));															// any = idaanbieding; put/post update
+Route::get('aanbiedingen', array('as' => 'all_aanbiedingen', 'uses' => 'aanbiedingen@all'));																							// alle aanbiedingen
+Route::get('aanbiedingen/(:any)', array('as' => 'aanbiedingen', 'before' => 'authbedrijf', 'uses' => 'aanbiedingen@index'));							// id bedrijf
+Route::get('aanbiedingen/show/(:any)', array('as' => 'aanbieding', 'uses' => 'aanbiedingen@show'));																				// 1 aanbieding
+Route::get('aanbiedingen/new/(:any)', array('as' => 'new_aanbieding', 'before' => 'authbedrijf', 'uses' => 'aanbiedingen@new'));					// any = idbedrijf; form new aanbieding
+Route::get('aanbiedingen/(:any)/edit', array('as' => 'edit_aanbieding', 'before' => 'authbedrijf', 'uses' => 'aanbiedingen@edit'));				// any = idaanbieding; edit form
 Route::get('aanbiedingen/(:any)/delete', array('as' => 'del_aanbieding', 'before' => 'authbedrijf', 'uses' => 'aanbiedingen@destroy'));
+Route::post('aanbiedingen', array('before' => 'authbedrijf', 'uses' => 'aanbiedingen@create'));
+Route::put('aanbiedingen/(:any)', array('before' => 'authbedrijf', 'uses' => 'aanbiedingen@update'));																			// any = idaanbieding; put/post update
+
 
 
 /*
@@ -136,4 +137,4 @@ Route::filter('authbedrijf', function()
 // tijdens login kijken of of de gebruiker bij een bedrijf hoort.
 // zoja die opslaan in de sessie
 
-// en authrightbedrijf toevoegen aan sommige produten routes. 
+// en authrightbedrijf toevoegen aan sommige produten routes.

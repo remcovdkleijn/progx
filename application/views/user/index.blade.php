@@ -13,6 +13,9 @@
 	@endif
 
 	{{ Form::open('login') }}
+
+		{{ Form::token() }}
+
 		{{ Form::label('email', 'E-Mail Address') }}
 		{{ Form::text('email', Session::get('form_values')['email']) }}
 		{{ $errors->first('email', '<p>:message</p>') }}

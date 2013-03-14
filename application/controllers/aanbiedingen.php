@@ -4,86 +4,71 @@ class Aanbiedingen_Controller extends Base_Controller {
 
 	public $restful = true;
 
-	public $form_rules = array(
-		'actienaam' => 'required',
-		//'omschrijving' => '',
-		'korting' => 'required|numeric',
-		'producten' => 'required',
-		'actief' => 'required'
-	);
-
 	public $form_messages = array(
 		'required' => 'The :attribute field is required.'
-	);
+		);
 
 	public function get_all(){
-		$aanbiedingen = Aanbieding::with(array('producten', 'bedrijf'))->where('actief', '=', '1')->get();
-		foreach ($aanbiedingen as $key => $aanbieding) {
-			foreach ($aanbieding->relationships['producten'] as $key2 => $product) {
-				$aanbiedingen[$key]->relationships['producten'][$key2] = Product::with('productcategorie')->where('idproduct', '=', $product->idproduct)->first();
-			}
-		}
 
-		return View::make('aanbieding.all', array('aanbiedingen' => $aanbiedingen));
+		$aanbiedingen = Aanbieding::get_all_active();
+
+		return View::make('aanbieding.all')
+		-> with('aanbiedingen', $aanbiedingen);
 	}
 
-	public function get_index($idbedrijf){
+	public function get_index($idbedrijf) {
 
 		$bedrijf = Bedrijf::find($idbedrijf);
 
-		$aanbiedingen = Aanbieding::with(array('producten'))->where('idbedrijf', '=', $idbedrijf)->get();
-		foreach ($aanbiedingen as $key => $aanbieding) {
-			foreach ($aanbieding->relationships['producten'] as $key2 => $product) {
-				$aanbiedingen[$key]->relationships['producten'][$key2] = Product::with('productcategorie')->where('idproduct', '=', $product->idproduct)->first();
-			}
-		}
+		$aanbiedingen = Aanbieding::get_all_belonging_to_bedrijf($idbedrijf);
 
-		return View::make('aanbieding.index', array('aanbiedingen' => $aanbiedingen, 'bedrijf' => $bedrijf));
+		return View::make('aanbieding.index')
+		-> with('aanbiedingen', $aanbiedingen)
+		-> with('bedrijf', $bedrijf);
 	}
 
 	public function post_create(){
 
-		if(!$this->check_business_auth(Input::get('idbedrijf'))){ return Redirect::to_route('index'); }
+		if( ! $this->check_business_auth(Input::get('idbedrijf'))) {
+			return Redirect::to_route('index');
+		}
 
-		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
+		$validation = Aanbieding::validate(Input::all());
 
-		if ($validation->fails()) {
+		if ( ! $validation->passes() ) {
+
+			return Redirect::to_route('new_aanbieding', Input::get('idbedrijf'))
+			-> with_errors($validation)
+			-> with_input();
+
+		} else {
+
 			$values = array(
+				'idbedrijf' => Input::get('idbedrijf'),
 				'actienaam' => Input::get('actienaam'),
 				'omschrijving' => Input::get('omschrijving'),
-	    		'korting' => Input::get('korting'),
-	    		'producten' => Input::get('producten'),
-	    		'actief' => Input::get('actief')
-	    	);
-        	return Redirect::to_route('new_aanbieding', Input::get('idbedrijf'))->with('form_values', $values)->with_errors($validation);
-    	} else {
+				'korting' => Input::get('korting'),
+				'actief' => Input::get('actief')
+				);
 
-    		$values = array(
-    			'idbedrijf' => Input::get('idbedrijf'),
-				'actienaam' => Input::get('actienaam'),
-				'omschrijving' => Input::get('omschrijving'),
-	    		'korting' => Input::get('korting'),
-	    		'actief' => Input::get('actief')
-	    	);
+			$newproducten = Input::get('producten');
 
-	    	$newproducten = Input::get('producten');
+			$aanbieding = Aanbieding::create($values);
 
-	    	$aanbieding = Aanbieding::create($values);
-	    	
-	    	if(is_array($newproducten)){
-    			foreach ($newproducten as $key => $value) {
-	    			$productenaanbieding = $aanbieding->producten()->attach($value);
-	    		}
-    		} else {
-    			$productenaanbieding = $aanbieding->producten()->attach($newproducten);
-    		}
+			if(is_array($newproducten)){
+				foreach ($newproducten as $key => $value) {
+					$productenaanbieding = $aanbieding->producten()->attach($value);
+				}
+			} else {
+				$productenaanbieding = $aanbieding->producten()->attach($newproducten);
+			}
 
-    		if($aanbieding){
-    			return Redirect::to_route('bedrijven')->with('message', 'de aanbieding is aangemaakt');
-    		} else {
-    			return 'database error';
-    		}
-    	}
+			if($aanbieding){
+				return Redirect::to_route('bedrijven')->with('message', 'de aanbieding is aangemaakt');
+			} else {
+				return 'database error';
+			}
+		}
 	}
 
 	public function get_show($index){
@@ -118,7 +103,10 @@ class Aanbiedingen_Controller extends Base_Controller {
 			$producten_per_aanbieding[] = $product->idproduct;
 		}
 
-		return View::make('aanbieding.edit', array('aanbieding' => $aanbieding, 'producten' => $producten, 'producten_per_aanbieding' => $producten_per_aanbieding));
+		return View::make('aanbieding.edit')
+		-> with('aanbieding', $aanbieding)
+		-> with('producten', $producten)
+		-> with('producten_per_aanbieding', $producten_per_aanbieding);
 	}
 
 	public function get_new($idbedrijf){
@@ -136,47 +124,44 @@ class Aanbiedingen_Controller extends Base_Controller {
 
 		if(!$this->check_business_auth($aanbieding->bedrijf->idbedrijf)){ return Redirect::to_route('index'); }
 
-		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
+		$validation = Aanbieding::validate(Input::all());
 
-		if ($validation->fails()) {
+		if ( ! $validation->passes() ) {
+
+			return Redirect::to_route('edit_aanbieding', $index)
+			-> with_input()
+			-> with_errors($validation);
+
+		} else {
+
 			$values = array(
 				'actienaam' => Input::get('actienaam'),
 				'omschrijving' => Input::get('omschrijving'),
-	    		'korting' => Input::get('korting'),
-	    		'producten' => Input::get('producten'),
-	    		'actief' => Input::get('actief')
-	    	);
-        	return Redirect::to_route('edit_aanbieding', $index)->with('form_values', $values)->with_errors($validation);
-    	} else {
+				'korting' => Input::get('korting'),
+				'actief' => Input::get('actief')
+				);
 
-    		$values = array(
-				'actienaam' => Input::get('actienaam'),
-				'omschrijving' => Input::get('omschrijving'),
-	    		'korting' => Input::get('korting'),
-	    		'actief' => Input::get('actief')
-	    	);
+			$newproducten = Input::get('producten');
 
-	    	$newproducten = Input::get('producten');
+			$aanbieding = Aanbieding::find($index);
+			$aanbieding->producten()->delete();
+			$aanbieding->fill($values);
+			$aanbieding->save();
 
-	    	$aanbieding = Aanbieding::find($index);
-	    	$aanbieding->producten()->delete();
-	    	$aanbieding->fill($values);
-    		$aanbieding->save();
-	    	
-	    	if(is_array($newproducten)){
-    			foreach ($newproducten as $key => $value) {
-	    			$productenaanbieding = $aanbieding->producten()->attach($value);
-	    		}
-    		} else {
-    			$productenaanbieding = $aanbieding->producten()->attach($newproducten);
-    		}
+			if(is_array($newproducten)){
+				foreach ($newproducten as $key => $value) {
+					$productenaanbieding = $aanbieding->producten()->attach($value);
+				}
+			} else {
+				$productenaanbieding = $aanbieding->producten()->attach($newproducten);
+			}
 
-    		if($aanbieding){
-    			return Redirect::to_route('bedrijven')->with('message', 'de aanbieding is aangepast');
-    		} else {
-    			return 'database error';
-    		}
-    	}
+			if($aanbieding){
+				return Redirect::to_route('bedrijven')->with('message', 'de aanbieding is aangepast');
+			} else {
+				return 'database error';
+			}
+		}
 	}
 
 	public function get_destroy($index){
@@ -184,7 +169,7 @@ class Aanbiedingen_Controller extends Base_Controller {
 		if(is_null($aanbieding)){
 			return Redirect::to_route('index');
 		}
-	
+
 		if(!$this->check_business_auth($aanbieding->producten[0]->idbedrijf)){ return Redirect::to_route('index'); }
 
 		$aanbieding->producten()->delete();

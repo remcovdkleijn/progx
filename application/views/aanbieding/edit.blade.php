@@ -42,7 +42,7 @@
 
 			{{ Form::label('producten', $product->naam) }}
 
-			<?php 
+			<?php
 			if(Session::has('form_values')){
 				if(!is_null(Session::get('form_values')['producten']) && in_array($product->idproduct, Session::get('form_values')['producten'])){
 					echo Form::checkbox('producten[]', $product->idproduct, true);
@@ -58,7 +58,7 @@
 				}
 			}
 			?>
-			
+
 		@empty
 			<p>Er zijn geen producten</p>
 			<a href="{{ URL::to_route('new_product', $aanbieding->bedrijf->idbedrijf) }}">New Product</a>
@@ -67,33 +67,10 @@
 		<br />
 
 		{{ Form::label('actief', 'Actief') }}
-		{{ Form::label('actief', 'ja') }}
-		@if(Session::has('form_values'))
-			@if (Session::get('form_values')['actief'] == 1)
-				{{ Form::radio('actief', '1', true) }}
-			@else
-				{{ Form::radio('actief', '1') }}
-			@endif
-		@else
-			@if ( $aanbieding->actief == 1)
-				{{ Form::radio('actief', '1', true) }}
-			@else
-				{{ Form::radio('actief', '1') }}
-			@endif
-		@endif
-		{{ Form::label('actief', 'nee') }}
-		@if(Session::has('form_values'))
-			@if (Session::get('form_values')['actief'] == 0)
-				{{ Form::radio('actief', '0', true) }}
-			@else
-				{{ Form::radio('actief', '0') }}
-			@endif
-		@else
-			@if ( $aanbieding->actief == 0)
-				{{ Form::radio('actief', '0', true) }}
-			@else
-				{{ Form::radio('actief', '0') }}
-			@endif
+		@if($aanbieding -> actief == 0)
+			{{ Form::checkbox('actief', 1, false) }}
+		@elseif($aanbieding -> actief == 1)
+			{{ Form::checkbox('actief', 0, true) }}
 		@endif
 
 		{{ $errors->first('actief', '<p>:message</p>') }}

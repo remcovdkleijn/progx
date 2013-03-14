@@ -1,9 +1,9 @@
 <?php
 
-class Order extends Eloquent {
+class Order extends Basemodel {
 	public static $timestamps = false;
 
 	public static $key = 'idorder';
 
-	
+
 }

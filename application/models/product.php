@@ -1,6 +1,6 @@
 <?php
 
-class Product extends Eloquent {
+class Product extends Basemodel {
 	public static $timestamps = false;
 
 	public static $key = 'idproduct';
@@ -16,8 +16,8 @@ class Product extends Eloquent {
 	}
 
 	public function aanbiedingen(){
-         return $this->has_many_and_belongs_to('Aanbieding', 'product_per_aanbieding');
-    }
+		return $this->has_many_and_belongs_to('Aanbieding', 'product_per_aanbieding');
+	}
 
-	
+
 }

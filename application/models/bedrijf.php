@@ -1,6 +1,6 @@
 <?php
 
-class Bedrijf extends Eloquent {
+class Bedrijf extends Basemodel {
 	public static $timestamps = false;
 
 	public static $key = 'idbedrijf';
@@ -19,5 +19,5 @@ class Bedrijf extends Eloquent {
 		return $this->has_many('aanbieding', 'idaanbieding');
 	}
 
-	
+
 }

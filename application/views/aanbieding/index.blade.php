@@ -16,15 +16,10 @@
 		<p>Actienaam = {{ $aanbieding->actienaam }}</p>
 		<p>Omschrijving = {{ $aanbieding->omschrijving }}</p>
 		<p>Korting = {{ $aanbieding->korting }}%</p>
-		<p>Actief = 
-			@if ($aanbieding->actief == 1)
-				ja
-			@else
-				nee
-			@endif
-		</p>
+		<p>Actief = {{ ($aanbieding->actief) ? ("Ja") : ("Nee") }}</p>
 		<p>Bedrijf = {{ $aanbieding->bedrijf->bedrijfsnaam }}</p>
 		<p>Producten:</p>
+
 		<ul>
 			@forelse($aanbieding->producten as $product)
 				<li>
