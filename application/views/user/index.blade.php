@@ -1,11 +1,11 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Login</h2>
+	<h2>Inloggen</h2>
 
 	{{ $errors->first('password', '<p>:message</p>') }}
 
-	{{ Form::open('Inloggen') }}
+	{{ Form::open('login') }}
 
 		{{ Form::token() }}
 
