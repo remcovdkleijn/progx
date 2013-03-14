@@ -5,7 +5,7 @@
 
 	{{ $errors->first('password', '<p>:message</p>') }}
 
-	{{ Form::open('login') }}
+	{{ Form::open('Inloggen') }}
 
 		{{ Form::token() }}
 
