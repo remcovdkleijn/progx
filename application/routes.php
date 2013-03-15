@@ -14,7 +14,7 @@ Route::get('user/all', 										array('as' => 'showall_user', 		'uses' => 'user
 Route::post('login', 											array('as' => 'login_post', 			'uses' => 'users@login', 					'before' => 'csrf'							));		// POST login
 Route::post('register', 									array('as' => 'register_user', 		'uses' => 'users@create', 				'before' => 'csrf'							));		// POST register
 Route::put('user/update', 								array( 														'uses' => 'users@update', 				'before' => 'csrf'							)); 	// POST/PUT update
-Route::delete('user/(:any)', 							array(														'uses' => 'users@destroy'																					)); 	// niet gebruikt ~
+Route::delete('user/(:num)', 							array(														'uses' => 'users@destroy'																					)); 	// niet gebruikt ~
 
 // bedrijf Resource
 Route::get('bedrijf', 										array('as' => 'bedrijven', 				'uses' => 'bedrijven@index',			'before' => 'authbedrijf'				));		// show alle bedrijven van user
