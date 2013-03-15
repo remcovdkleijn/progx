@@ -12,6 +12,43 @@ class Producten_Controller extends Base_Controller {
 		-> with('producten', $producten);
 	}
 
+	public function get_show($product_id) {
+
+		$product = Product::find($product_id);
+
+		return View::make('product.show')
+		-> with('product' => $product);
+	}
+
+	public function get_new($bedrijfsid){
+		// form new product
+
+		if(!$this->check_business_auth($bedrijfsid)){ return Redirect::to_route('index'); }
+
+		$product_categorieen = Productcategorie::all();
+
+		$selectArray['categorie'] = '-categorie-';
+		foreach ($product_categorieen as $key => $value) {
+			$selectArray[$value->categorie] = $value->categorie;
+		}
+
+		return View::make('product.new', array('bedrijfsid' => $bedrijfsid, 'categorieen' => $selectArray));
+	}
+
+	public function get_edit($product_id){
+		// form edit product
+		$product = Product::find($product_id);
+
+		if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
+
+		$product_categorieen = Productcategorie::all();
+		foreach ($product_categorieen as $key => $value) {
+			$selectArray[$value->categorie] = $value->categorie;
+		}
+
+		return View::make('product.edit', array('product' => $product, 'categorieen' => $selectArray));
+	}
+
 	public function get_all_per_bedrijf($index){ // aanbiedingen weergeven
 		// alle producten laten zien
 
@@ -31,120 +68,55 @@ class Producten_Controller extends Base_Controller {
 	}
 
 	public function post_create(){
-		// create new product
 
 		if(!$this->check_business_auth(Input::get('idbedrijf'))){ return Redirect::to_route('index'); }
 
-		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
+		$validation = Product::validation(Input::all());
 
-		if ($validation->fails()) {
-			$values = array(
+		if ($validation->passes()) {
+
+			$product = Product::create(array(
+				'idproduct_categorie' => Productcategorie::where('categorie', '=', Input::get('categorie'))->first()->idproduct_categorie,
+				'idbedrijf' => Input::get('idbedrijf'),
 				'naam' => Input::get('naam'),
 				'omschrijving' => Input::get('omschrijving'),
-	    		'categorie' => Input::get('categorie'),
-	    		'hoeveelheid' => Input::get('hoeveelheid'),
-	    		'prijs' => Input::get('prijs'),
-	    	);
-        	return Redirect::to_route('new_product', Input::get('idbedrijf'))->with('form_values', $values)->with_errors($validation);
-    	} else {
+				'hoeveelheid' => Input::get('hoeveelheid'),
+				'prijs' => Input::get('prijs'),
+			));
 
-    		$values = array(
-    			'idproduct_categorie' => Productcategorie::where('categorie', '=', Input::get('categorie'))->first()->idproduct_categorie,
-    			'idbedrijf' => Input::get('idbedrijf'),
+			return Redirect::to_route('bedrijven')
+			->with('message', 'Product is opgeslagen!');
+		} else {
+			return Redirect::to_route('new_product')
+			-> with_input()
+			-> with_errors($validation);
+		}
+	}
+
+	public function put_update(){
+
+		$id = Input::get('product_id');
+
+		$validation = Product::validate(Input::all());
+
+		if ($validation -> passes()) {
+
+			if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
+
+			Product::update($id, array(
+				'idproduct_categorie' => Productcategorie::where('categorie', '=', Input::get('categorie'))->first()->idproduct_categorie,
 				'naam' => Input::get('naam'),
 				'omschrijving' => Input::get('omschrijving'),
-	    		'hoeveelheid' => Input::get('hoeveelheid'),
-	    		'prijs' => Input::get('prijs'),
-	    	);
+				'hoeveelheid' => Input::get('hoeveelheid'),
+				'prijs' => Input::get('prijs')
+			));
 
-    		$product = Product::create($values);
-    		if($product){
-    			return Redirect::to_route('bedrijven')->with('message', 'the product had been created');
-    		} else {
-    			return 'database error';
-    		}
-    	}
-	}
-
-	public function get_show($index){ // aanbiedingen weergeven
-		// show 1 product
-		$product = Product::with(array('productcategorie', 'bedrijf', 'aanbiedingen'))->where('idproduct', '=', $index)->first();
-		if(is_null($product)){
-			return Redirect::to_route('index');
+			return Redirect::to_route('bedrijven')->with('message', 'the product had been edited');
+		} else {
+			return Redirect::to_route('edit_product', $id)
+			-> with_input()
+			-> with_errors($validation);
 		}
-
-		$get = $this->check_business_auth($product->bedrijf->idbedrijf);
-
-		return View::make('product.show', array('product' => $product, 'get' => $get));
-	}
-
-	public function get_edit($index){
-		// form edit product
-		$product = Product::with('productcategorie')->where('idproduct', '=', $index)->first();
-		if(is_null($product)){
-			return Redirect::to_route('index');
-		}
-
-		if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
-
-		$product_categorieen = Productcategorie::all();
-		foreach ($product_categorieen as $key => $value) {
-			$selectArray[$value->categorie] = $value->categorie;
-		}
-
-		return View::make('product.edit', array('product' => $product, 'categorieen' => $selectArray));
-	}
-
-	public function get_new($bedrijfsid){
-		// form new product
-
-		if(!$this->check_business_auth($bedrijfsid)){ return Redirect::to_route('index'); }
-
-		$product_categorieen = Productcategorie::all();
-
-		$selectArray['categorie'] = '-categorie-';
-		foreach ($product_categorieen as $key => $value) {
-			$selectArray[$value->categorie] = $value->categorie;
-		}
-
-		return View::make('product.new', array('bedrijfsid' => $bedrijfsid, 'categorieen' => $selectArray));
-	}
-
-	public function put_update($index){
-		// update product
-
-		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
-
-		if ($validation->fails()) {
-			$values = array(
-				'naam' => Input::get('naam'),
-				'omschrijving' => Input::get('omschrijving'),
-	    		'categorie' => Input::get('categorie'),
-	    		'hoeveelheid' => Input::get('hoeveelheid'),
-	    		'prijs' => Input::get('prijs'),
-	    	);
-        	return Redirect::to_route('edit_product', $index)->with('form_values', $values)->with_errors($validation);
-    	} else {
-
-    		$values = array(
-    			'idproduct_categorie' => Productcategorie::where('categorie', '=', Input::get('categorie'))->first()->idproduct_categorie,
-				'naam' => Input::get('naam'),
-				'omschrijving' => Input::get('omschrijving'),
-	    		'hoeveelheid' => Input::get('hoeveelheid'),
-	    		'prijs' => Input::get('prijs'),
-	    	);
-
-    		$product = Product::find($index);
-    		if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
-    		$product->fill($values);
-    		$product->save();
-    		if($product){
-    			return Redirect::to_route('bedrijven')->with('message', 'the product had been edited');
-    		} else {
-    			return 'database error';
-    		}
-    	}
-
 	}
 
 	public function get_destroy($index){
@@ -174,7 +146,7 @@ class Producten_Controller extends Base_Controller {
 		} else {
 			return false;
 		}
+
+		return FALSE;
 	}
-
-
 }

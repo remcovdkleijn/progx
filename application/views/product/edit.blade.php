@@ -3,7 +3,11 @@
 @section('content')
 	<h2>Edit product</h2>
 
-	{{ Form::open('producten/' . $product->idproduct, 'PUT') }}
+	{{ Form::open('producten/update', 'PUT') }}
+
+		{{ Form::token() }}
+
+		{{ Form::hidden('product_id', $product -> idproduct) }}
 
 		{{ Form::label('naam', 'Naam') }}
 		@if(Session::has('form_values'))

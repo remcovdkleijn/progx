@@ -4,21 +4,6 @@ class Bedrijven_Controller extends Base_Controller {
 
 	public $restful = true;
 
-	public $form_rules = array(
-		'bedrijfsnaam' => 'required',
-		'kvk' => 'required',
-		'adres' => 'required',
-		'postcode' => 'required',
-		'city' => 'required',
-		'land' => 'required'
-	);
-
-
-	public $form_messages = array(
-		'required' => 'The :attribute field is required.',
-		'unique' => 'The :attribute field already exists.'
-	);
-
 	public function get_index(){
 
 		$user = Auth::user();
@@ -27,55 +12,53 @@ class Bedrijven_Controller extends Base_Controller {
 		return View::make('bedrijf.index', array('bedrijven' => $bedrijven));
 	}
 
-	public function post_create(){
+	public function get_show($bedrijf_id){
 
-		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
+		$bedrijf = Bedrijf::find($bedrijf_id);
 
-		$values = array(
-			'bedrijfsnaam' => Input::get('bedrijfsnaam'),
-			'kvk' => Input::get('kvk'),
-    		'adres' => Input::get('adres'),
-    		'postcode' => Input::get('postcode'),
-    		'city' => Input::get('city'),
-    		'land' => Input::get('land'),
-    	);
-
-		if ($validation->fails()) {
-        	return Redirect::to_route('new_bedrijf')->with('form_values', $values)->with_errors($validation);
-    	} else {
-
-    		$bedrijf = Bedrijf::create($values);
-    		if($bedrijf){
-    			return Redirect::to_route('index')->with('message', 'het bedrijf is aangemaakt');
-    		} else {
-    			return 'database error';
-    		}
-    	}
-
-	}
-
-	public function get_show($index){
-		$user = Auth::user();
-		$bedrijf = $user->bedrijven()->find($index);
-		if(is_null($bedrijf)){
-			return Redirect::to_route('index');
-		}
-
-		return View::make('bedrijf.show', array('bedrijf' => $bedrijf));
-	}
-
-	public function get_edit($index){
-		$user = Auth::user();
-		$bedrijf = $user->bedrijven()->find($index);
-		if(is_null($bedrijf)){
-			return Redirect::to_route('index');
-		}
-
-		return View::make('bedrijf.edit', array('bedrijf' => $bedrijf));
+		return View::make('bedrijf.show')
+		-> with('bedrijf', $bedrijf);
 	}
 
 	public function get_new(){
 		return View::make('bedrijf.new');
+	}
+
+	public function get_edit($bedrijf_id){
+
+		$bedrijf = Bedrijf::find($bedrijf_id);
+
+		// if( ! in_array($bedrijf, Auth::user() -> bedrijven)) {
+		// 	return Redirect::to_route('index');
+		// }
+
+		return View::make('bedrijf.edit')
+		-> with('bedrijf', $bedrijf);
+	}
+
+	public function post_create(){
+
+		$validation = Bedrijf::validate(Input::all());
+
+		if ($validation -> passes()) {
+
+			Bedrijf::create(array(
+				'bedrijfsnaam' => Input::get('bedrijfsnaam'),
+				'kvk' => Input::get('kvk'),
+				'adres' => Input::get('adres'),
+				'postcode' => Input::get('postcode'),
+				'city' => Input::get('city'),
+				'land' => Input::get('land')
+				));
+
+			return Redirect::to_route('index')
+			-> with('message', 'Het bedrijf "' . Input::get('bedrijfsnaam') . '" is succesvol aangemaakt!');
+		} else {
+
+			return Redirect::to_route('new_bedrijf')
+			-> with_input()
+			-> with_errors($validation);
+		}
 	}
 
 	public function put_update($index){
@@ -93,17 +76,15 @@ class Bedrijven_Controller extends Base_Controller {
 				'postcode' => Input::get('postcode'),
 				'city' => Input::get('city'),
 				'land' => Input::get('land')
-			));
+				));
 
 			return Redirect::to_route('bedrijf', $id)
 			-> with('message', 'Bedrijfsinformatie geüpdate!');
-
 		} else {
 
 			return Redirect::to_route('edit_bedrijf', $id)
 			-> with_input()
 			-> with_errors($validation);
-
 		}
 	}
 
