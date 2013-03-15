@@ -49,9 +49,18 @@ class Users_Controller extends Base_Controller {
 
 	public function put_update(){
 
-		$validation = true;
+		$profile_rules = array(
+			'voornaam' => 'required',
+			'achternaam' => 'required',
+			'adres' => 'required',
+			'postcode' => 'alpha_num',
+			'city' => 'required',
+			'land' => 'required'
+		);
 
-		if($validation) {
+		$validation = Validator::make(Input::all(), $profile_rules);
+
+		if($validation -> passes()) {
 			User::update(Auth::user() -> iduser, array(
 				'voornaam' => Input::get('voornaam'),
 				'achternaam' => Input::get('achternaam'),
