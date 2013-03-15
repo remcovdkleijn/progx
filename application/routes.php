@@ -6,9 +6,10 @@ Route::get('/', array('as' => 'index', 'uses' => 'home@index'));
 Route::get('login', array('as' => 'login', 'uses' => 'users@login'));																		// form login
 Route::get('logout', array('as' => 'logout', 'before' => 'authuser', 'uses' => 'users@logout')); 				// logout
 Route::get('user/(:num)', array('as' => 'show_user', 'uses' => 'users@show'));															// eventueel profile pagina ~
-Route::get('user/new', array('as' => 'new_user', 'uses' => 'users@new')); 															// form register
+Route::get('user/register', array('as' => 'register_user', 'uses' => 'users@new')); 															// form register
 Route::get('user/edit', array('as' => 'edit_user', 'before' => 'authuser', 'uses' => 'users@edit'));	// form edit
-Route::post('user/new', 'users@create');																																		// POST register
+Route::get('user/all', array('as' => 'showall_user', 'uses' => 'users@index'));
+Route::post('user/register', array('as' => 'register_user', 'uses' => 'users@create'));																																		// POST register
 Route::post('login', array('before' => 'csrf', 'as' => 'login_post', 'uses' => 'users@login'));															// POST login
 Route::put('user/update', array('before' => 'authuser', 'uses' => 'users@update')); 													// POST/PUT update
 Route::delete('user/(:any)', 'users@destroy'); 																												// niet gebruikt ~

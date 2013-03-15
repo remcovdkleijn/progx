@@ -1,26 +1,17 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Inloggen</h2>
+	<h2>Gebruikers</h2>
 
-	{{ $errors->first('password', '<p>:message</p>') }}
+	@if( ! $users -> results)
+		<p>Geen gebruikers gevonden.</p>
+	@else
+		<ul id="users-list">
+			@foreach($users -> results as $user)
+				<li>{{ $user -> email }}</li>
+			@endforeach
+		</ul>
 
-	{{ Form::open('login') }}
-
-		{{ Form::token() }}
-
-		<p>
-			{{ Form::label('email', 'E-mailadres:') }}
-			{{ Form::text('email', Session::get('form_values')['email']) }}
-			{{ $errors->first('email', '<p>:message</p>') }}
-		</p>
-
-		<p>
-			{{ Form::label('password', 'Wachtwoord:') }}
-			{{ Form::password('password') }}
-		</p>
-
-		{{ Form::submit('Aanmelden') }}
-	{{ Form::close() }}
-
+		{{ $users -> links() }}
+	@endif
 @endsection

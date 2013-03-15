@@ -4,8 +4,16 @@ class Users_Controller extends Base_Controller {
 
 	public $restful = true;
 
+	public function get_index() {
+
+		$users = User::paginate(5);
+
+		return View::make('user.index')
+			-> with('users', $users);
+	}
+
 	public function get_login(){
-		return View::make('user.index');
+		return View::make('user.login');
 	}
 
 	public function post_login() {
@@ -54,13 +62,15 @@ class Users_Controller extends Base_Controller {
 				'land' => Input::get('land')
 			));
 
-			$user = User::where_username(Input::get('email')) -> first();
+			$user = User::where_email(Input::get('email')) -> first();
 			Auth::login($user);
 
 			return Redirect::to_route('index')
 				->with('message', 'Thanks for registering. You are now logged in.');
 		} else {
-			return Redirect::to_route('register') -> with_errors($validation) -> with_input();
+			return Redirect::to_route('register_user')
+				-> with_errors($validation)
+				-> with_input();
 		}
 	}
 

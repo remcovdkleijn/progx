@@ -3,12 +3,12 @@
 @section('content')
 	<h2>Registreren</h2>
 
-	{{ Form::open('users/new') }}
+	{{ Form::open('user/register') }}
 
 		<h3>Account</h3>
 		<p>
 			{{ Form::label('email', 'Je e-mailadres:') }}
-			{{ Form::text('email', Session::get('form_values')['email']) }}
+			{{ Form::text('email', Input::old('email')) }}
 			{{ $errors->first('email', '<p>:message</p>') }}
 		</p>
 
@@ -28,37 +28,37 @@
 		<h3>Persoonsgegevens</h3>
 		<p>
 			{{ Form::label('voornaam', 'Voornaam:') }}
-			{{ Form::text('voornaam', Session::get('form_values')['voornaam']) }}
+			{{ Form::text('voornaam', Input::old('voornaam')) }}
 			{{ $errors->first('voornaam', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('achternaam', 'Achternaam:') }}
-			{{ Form::text('achternaam', Session::get('form_values')['achternaam']) }}
+			{{ Form::text('achternaam', Input::old('achternaam')) }}
 			{{ $errors->first('achternaam', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('adres', 'Adres:') }}
-			{{ Form::text('adres', Session::get('form_values')['adres']) }}
+			{{ Form::text('adres', Input::old('adres')) }}
 			{{ $errors->first('adres', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('postcode', 'Postcode:') }}
-			{{ Form::text('postcode', Session::get('form_values')['postcode']) }}
+			{{ Form::text('postcode', Input::old('postcode')) }}
 			{{ $errors->first('postcode', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('city', 'Woonplaats:') }}
-			{{ Form::text('city', Session::get('form_values')['city']) }}
+			{{ Form::text('city', Input::old('city')) }}
 			{{ $errors->first('city', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('land', 'Land:') }}
-			{{ Form::text('land', Session::get('form_values')['land']) }}
+			{{ Form::text('land', Input::old('land')) }}
 			{{ $errors->first('land', '<p>:message</p>') }}
 		</p>
 

@@ -8,14 +8,14 @@ class User extends Basemodel {
 
 	public static $rules = array(
 		'email' => 'required|unique:users|email',
-		'password' => 'required|alpha_num|min:6|confirmed',
-		'password_confirmation' => 'required|alpha_num|min:6',
+		'password' => 'required|alpha_num|min:4|confirmed',
+		'password_confirmation' => 'required|alpha_num|min:4',
 		'voornaam' => 'required',
 		'achternaam' => 'required',
-		'adres' => '',
+		'adres' => 'required',
 		'postcode' => 'alpha_num',
-		'city' => '',
-		'land' => ''
+		'city' => 'required',
+		'land' => 'required'
 	);
 
 	public function bedrijven(){
