@@ -3,7 +3,7 @@
 @section('content')
 	<h2>Registreren</h2>
 
-	{{ Form::open('users') }}
+	{{ Form::open('users/new') }}
 
 		<h3>Account</h3>
 		<p>

@@ -3,15 +3,15 @@
 Route::get('/', array('as' => 'index', 'uses' => 'home@index'));
 
 // user Resource
-Route::get('login', array('as' => 'login', 'uses' => 'users@index'));																		// form login
+Route::get('login', array('as' => 'login', 'uses' => 'users@login'));																		// form login
 Route::get('logout', array('as' => 'logout', 'before' => 'authuser', 'uses' => 'users@logout')); 				// logout
-Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show'));															// eventueel profile pagina ~
-Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new')); 															// form register
-Route::get('users/edit', array('as' => 'edit_user', 'before' => 'authuser', 'uses' => 'users@edit'));	// form edit
-Route::post('users', 'users@create');																																		// POST register
+Route::get('user/(:num)', array('as' => 'show_user', 'uses' => 'users@show'));															// eventueel profile pagina ~
+Route::get('user/new', array('as' => 'new_user', 'uses' => 'users@new')); 															// form register
+Route::get('user/edit', array('as' => 'edit_user', 'before' => 'authuser', 'uses' => 'users@edit'));	// form edit
+Route::post('user/new', 'users@create');																																		// POST register
 Route::post('login', array('before' => 'csrf', 'as' => 'login_post', 'uses' => 'users@login'));															// POST login
-Route::put('users/update', array('before' => 'authuser', 'uses' => 'users@update')); 													// POST/PUT update
-Route::delete('users/(:any)', 'users@destroy'); 																												// niet gebruikt ~
+Route::put('user/update', array('before' => 'authuser', 'uses' => 'users@update')); 													// POST/PUT update
+Route::delete('user/(:any)', 'users@destroy'); 																												// niet gebruikt ~
 
 // bedrijf Resource
 Route::get('bedrijf', array('as' => 'bedrijven', 'before' => 'authbedrijf', 'uses' => 'bedrijven@index'));															// show alle bedrijven van user

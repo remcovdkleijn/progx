@@ -4,8 +4,34 @@ class Users_Controller extends Base_Controller {
 
 	public $restful = true;
 
-	public function get_index(){
+	public function get_login(){
 		return View::make('user.index');
+	}
+
+	public function post_login() {
+		$user = array(
+			'username' => Input::get('email'),
+			'password' => Input::get('password')
+		);
+
+		if(Auth::attempt($user)) {
+			return Redirect::to_route('index')
+				->with('message', 'You are now logged in!');
+		} else {
+			return Redirect::to_route('login')
+				-> with('message', 'Your username/password combination was incorrect')
+				-> with_input();
+		}
+	}
+
+	public function get_logout() {
+		if(Auth::check()) {
+			Auth::logout();
+			return Redirect::to_route('login')
+				->with('message', 'You are now logged out!');
+		} else {
+			return Redirect::to_route('index');
+		}
 	}
 
 	public function get_new(){
@@ -38,8 +64,11 @@ class Users_Controller extends Base_Controller {
 		}
 	}
 
-	public function get_show(){
+	public function get_show($user_id = NULL){
+		$user = User::find($user_id);
 
+		return View::make('user.show')
+			-> with('user', $user);
 	}
 
 	public function get_edit(){
@@ -75,37 +104,6 @@ class Users_Controller extends Base_Controller {
 			return Redirect::to_route('edit_user')
 				-> with_errors($validation)
 				-> with('message', 'Er is iets mis gegaan. :(');
-		}
-	}
-
-	public function get_login() {
-		return View::make('users.login')
-			->with('title', 'Laravel Test - Login');
-	}
-
-	public function post_login() {
-		$user = array(
-			'username' => Input::get('email'),
-			'password' => Input::get('password')
-		);
-
-		if(Auth::attempt($user)) {
-			return Redirect::to_route('index')
-				->with('message', 'You are now logged in!');
-		} else {
-			return Redirect::to_route('login')
-				-> with('message', 'Your username/password combination was incorrect')
-				-> with_input();
-		}
-	}
-
-	public function get_logout() {
-		if(Auth::check()) {
-			Auth::logout();
-			return Redirect::to_route('login')
-				->with('message', 'You are now logged out!');
-		} else {
-			return Redirect::to_route('index');
 		}
 	}
 }

@@ -3,7 +3,7 @@
 @section('content')
 	<h2>Mijn gegevens</h2>
 
-	{{ Form::open('users/update', 'PUT') }}
+	{{ Form::open('user/update', 'PUT') }}
 
 		<p> Jouw e-mailadres: {{ $user->email }} </p>
 
