@@ -3,7 +3,9 @@
 @section('content')
 	<h2>Registreren</h2>
 
-	{{ Form::open('user/register') }}
+	{{ Form::open('register') }}
+
+	{{ Form::token() }}
 
 		<h3>Account</h3>
 		<p>

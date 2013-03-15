@@ -4,26 +4,15 @@ class Producten_Controller extends Base_Controller {
 
 	public $restful = true;
 
-	public $form_rules = array(
-		'naam' => 'required',
-		//'omschrijving' => '',
-		'categorie' => 'required|not_in:categorie',
-		'hoeveelheid' => 'required|numeric',
-		'prijs' => 'required|numeric',
-	);
+	public function get_index() {
 
-	public $form_messages = array(
-		'required' => 'The :attribute field is required.',
-		'numeric' => 'The :attribute field may containt only numbers.',
-		'not_in' => 'Please select a :attribute'
-	);
+		$producten = Product::paginate(10);
 
-	public function get_all(){ // aanbiedingen weergeven
-		$producten = Product::with(array('productcategorie', 'bedrijf', 'aanbiedingen'))->get();
-		return View::make('product.all', array('producten' => $producten));
+		return View::make('product.index')
+		-> with('producten', $producten);
 	}
 
-	public function get_index($index){ // aanbiedingen weergeven
+	public function get_all_per_bedrijf($index){ // aanbiedingen weergeven
 		// alle producten laten zien
 
 		if(!$this->check_business_auth($index)){ return Redirect::to_route('index'); }
@@ -155,7 +144,7 @@ class Producten_Controller extends Base_Controller {
     			return 'database error';
     		}
     	}
-		
+
 	}
 
 	public function get_destroy($index){

@@ -3,9 +3,12 @@
 @section('content')
 	<h2>new aanbieding</h2>
 
-	{{ Form::open('aanbiedingen/' . $aanbieding->idaanbieding, 'PUT') }}
+	{{ Form::open('aanbiedingen/update', 'PUT') }}
 
-		{{ Form::hidden('idbedrijf', $aanbieding->bedrijf->idbedrijf) }}
+		{{ Form::token() }}
+
+		{{ Form::hidden('aanbieding_id', $aanbieding -> idaanbieding) }}
+		{{ Form::hidden('bedrijf_id', $aanbieding -> bedrijf -> idbedrijf) }}
 
 		{{ Form::label('actienaam', 'Actienaam') }}
 		@if(Session::has('form_values'))

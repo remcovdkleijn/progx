@@ -3,7 +3,11 @@
 @section('content')
 	<h2>Edit bedrijf</h2>
 
-	{{ Form::open('bedrijf/' . $bedrijf->idbedrijf, 'PUT') }}
+	{{ Form::open('bedrijf/update', 'PUT') }}
+
+		{{ Form::token() }}
+
+		{{ Form::hidden('bedrijf_id', $bedrijf -> idbedrijf) }}
 
 		{{ Form::label('bedrijfsnaam', 'Bedrijfsnaam') }}
 		@if(Session::has('form_values'))

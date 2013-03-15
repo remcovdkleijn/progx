@@ -43,7 +43,7 @@ class Bedrijven_Controller extends Base_Controller {
 		if ($validation->fails()) {
         	return Redirect::to_route('new_bedrijf')->with('form_values', $values)->with_errors($validation);
     	} else {
-    		
+
     		$bedrijf = Bedrijf::create($values);
     		if($bedrijf){
     			return Redirect::to_route('index')->with('message', 'het bedrijf is aangemaakt');
@@ -80,27 +80,31 @@ class Bedrijven_Controller extends Base_Controller {
 
 	public function put_update($index){
 
-		$validation = Validator::make(Input::all(), $this->form_rules, $this->form_messages);
+		$id = Input::get('bedrijf_id');
 
-		$values = array(
-			'bedrijfsnaam' => Input::get('bedrijfsnaam'),
-			'kvk' => Input::get('kvk'),
-    		'adres' => Input::get('adres'),
-    		'postcode' => Input::get('postcode'),
-    		'city' => Input::get('city'),
-    		'land' => Input::get('land'),
-    	);
+		$validation = Bedrijf::validate(Input::all());
 
-		if ($validation->fails()) {
-			return Redirect::to_route('edit_bedrijf', $index)->with('form_values', $values)->with_errors($validation);
-    	} else {
-    		$user = Auth::user();
-			$bedrijf = $user->bedrijven()->find($index);
-			$bedrijf->fill($values);
-			$bedrijf->save();
-			return Redirect::to_route('bedrijven', $index)->with('message', 'your account had been edited');
-    	}
+		if ($validation->passes()) {
 
+			Bedrijf::update(array(
+				'bedrijfsnaam' => Input::get('bedrijfsnaam'),
+				'kvk' => Input::get('kvk'),
+				'adres' => Input::get('adres'),
+				'postcode' => Input::get('postcode'),
+				'city' => Input::get('city'),
+				'land' => Input::get('land')
+			));
+
+			return Redirect::to_route('bedrijf', $id)
+			-> with('message', 'Bedrijfsinformatie geüpdate!');
+
+		} else {
+
+			return Redirect::to_route('edit_bedrijf', $id)
+			-> with_input()
+			-> with_errors($validation);
+
+		}
 	}
 
 	public function get_ontkoppel($index){
@@ -111,7 +115,7 @@ class Bedrijven_Controller extends Base_Controller {
 		} else {
 			$temp = Session::get('businessids');
 			unset($temp[array_search($index, $temp)]);
-			
+
 			if(count($temp) == 0){
 				Session::forget('businessids');
 				Session::put('logintype', 'user');

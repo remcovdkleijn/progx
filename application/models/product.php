@@ -7,6 +7,14 @@ class Product extends Basemodel {
 
 	public static $table = "producten";
 
+	public static $rules = array(
+		'naam' => 'required',
+		//'omschrijving' => '',
+		'categorie' => 'required|not_in:categorie',
+		'hoeveelheid' => 'required|numeric',
+		'prijs' => 'required|numeric'
+	);
+
 	public function productcategorie(){
 		return $this->belongs_to('Productcategorie', 'idproduct_categorie');
 	}

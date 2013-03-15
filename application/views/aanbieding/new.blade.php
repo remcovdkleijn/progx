@@ -5,6 +5,8 @@
 
 	{{ Form::open('aanbiedingen') }}
 
+		{{ Form::token() }}
+
 		{{ Form::hidden('idbedrijf', $bedrijf->idbedrijf) }}
 
 		{{ Form::label('actienaam', 'Actienaam') }}

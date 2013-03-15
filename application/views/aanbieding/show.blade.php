@@ -3,16 +3,10 @@
 @section('content')
 	<h2>Aanbieding</h2>
 
-	<p>Actienaam = {{ $aanbieding->actienaam }}</p>
+	<p>Actienaam = {{ $aanbieding -> actienaam }}</p>
 	<p>Omschrijving = {{ $aanbieding->omschrijving }}</p>
 	<p>Korting = {{ $aanbieding->korting }}%</p>
-	<p>Actief =
-		@if ($aanbieding->actief == 1)
-			ja
-		@else
-			nee
-		@endif
-	</p>
+	<p>Actief = {{ ($aanbieding -> actief) ? ("Ja") : ("Nee") }}</p>
 	<p>Bedrijf = {{ $aanbieding->bedrijf->bedrijfsnaam }}</p>
 	<p>Producten:</p>
 	<ul>
@@ -29,9 +23,9 @@
 			<p>Er zijn geen aanbiedingen</p>
 		@endforelse
 	</ul>
-	@if ($edit)
-		<a href="{{ URL::to_route('edit_aanbieding', $aanbieding->idaanbieding) }}">edit aanbieding</a>
-		<a href="{{ URL::to_route('del_aanbieding', $aanbieding->idaanbieding) }}">delete aanbieding</a>
+	@if(in_array($aanbieding -> bedrijf, Auth::user() -> bedrijven))
+		{{ HTML::link_to_route('edit_aanbieding', 'Aanpassen', $aanbieding -> idaanbieding) }}
+		{{ HTML::link_to_route('del_aanbieding', 'Verwijderen', $aanbieding -> idaanbieding) }}
 	@endif
 
 

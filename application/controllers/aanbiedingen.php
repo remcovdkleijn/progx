@@ -4,11 +4,7 @@ class Aanbiedingen_Controller extends Base_Controller {
 
 	public $restful = true;
 
-	public $form_messages = array(
-		'required' => 'The :attribute field is required.'
-		);
-
-	public function get_all(){
+	public function get_index(){
 
 		$aanbiedingen = Aanbieding::get_all_active();
 
@@ -16,7 +12,7 @@ class Aanbiedingen_Controller extends Base_Controller {
 		-> with('aanbiedingen', $aanbiedingen);
 	}
 
-	public function get_index($idbedrijf) {
+	public function get_aanbiedingen_van_bedrijf($idbedrijf) {
 
 		$bedrijf = Bedrijf::find($idbedrijf);
 
@@ -71,23 +67,17 @@ class Aanbiedingen_Controller extends Base_Controller {
 		}
 	}
 
-	public function get_show($index){
+	public function get_show($product_id){
 
-		$aanbieding = Aanbieding::with(array('producten', 'bedrijf'))->where('idaanbieding', '=', $index)->first();
+		$aanbieding = Aanbieding::find($product_id);
+
 		if(is_null($aanbieding)){
-			return Redirect::to_route('index');
+			return Redirect::to_route('index')
+			-> with('message', 'Aanbieding is niet gevonden.');
 		}
 
-		$edit = $this->check_business_auth($aanbieding->bedrijf->idbedrijf);
-		if($aanbieding->actief == 0){
-			if(!$edit){ return Redirect::to_route('index'); }
-		}
-
-		foreach ($aanbieding->relationships['producten'] as $key => $product) {
-			$aanbieding->relationships['producten'][$key] = Product::with('productcategorie')->where('idproduct', '=', $product->idproduct)->first();
-		}
-
-		return View::make('aanbieding.show', array('aanbieding' => $aanbieding, 'edit' => $edit));
+		return View::make('aanbieding.show')
+		-> with('aanbieding', $aanbieding);
 	}
 
 	public function get_edit($index){

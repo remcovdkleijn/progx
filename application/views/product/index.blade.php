@@ -1,23 +1,23 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Alle Producten van bedrijf {{$bedrijf->bedrijfsnaam}}</h2>
+	<h2>Alle Producten</h2>
 
-	@forelse ($producten as $product)
+	@forelse ($producten -> results as $product)
 		<p>Naam: {{ $product->naam }}</p>
 		<p>Categorie: {{ $product->productcategorie->categorie }}</p>
+		<p>Bedrijf: {{ $product->bedrijf->bedrijfsnaam }}</p>
 		@forelse ($product->aanbiedingen as $aanbieding)
-			<p>Actienaam: {{ $aanbieding->actienaam }}, {{ $aanbieding->korting }}% korting. <a href="{{ URL::to_route('aanbieding', $aanbieding->idaanbieding) }}">Bekijk actie</a></p>
+			@if($aanbieding->actief == 1)
+				<p>Actienaam: {{ $aanbieding->actienaam }}, {{ $aanbieding->korting }}% korting. <a href="{{ URL::to_route('aanbieding', $aanbieding->idaanbieding) }}">Bekijk actie</a></p>
+			@endif
 		@empty
 			<p>Er zijn geen aanbiedingen voor dit product</p>
 		@endforelse
 
-		<a href="{{URL::to_route('product', $product->idproduct) }}">show</a>
-
-		<hr />
+		{{ HTML::link_to_route('product', 'Show', $product->idproduct) }}
 	@empty
 		<p>Er zijn geen producten</p>
-		<a href="{{ URL::to_route('new_product', $bedrijf->idbedrijf) }}">New Product</a>
 	@endforelse
 
 @endsection

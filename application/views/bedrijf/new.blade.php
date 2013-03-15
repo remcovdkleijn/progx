@@ -3,7 +3,9 @@
 @section('content')
 	<h2>Registreren Bedrijven</h2>
 
-	{{ Form::open('bedrijf') }}
+	{{ Form::open('bedrijf/create') }}
+
+		{{ Form::token() }}
 
 		{{ Form::label('bedrijfsnaam', 'Bedrijfsnaam') }}
 		{{ Form::text('bedrijfsnaam', Session::get('form_values')['bedrijfsnaam']) }}
