@@ -3,67 +3,43 @@
 @section('content')
 	<h2>Mijn gegevens</h2>
 
-	{{ Form::open('users', 'PUT') }}
+	{{ Form::open('users/update', 'PUT') }}
 
-		<p> Jouw e-mailadres: {{ $userdata->email }} </p>
+		<p> Jouw e-mailadres: {{ $user->email }} </p>
 
 		<p>
 			{{ Form::label('voornaam', 'Voornaam:') }}
-			@if(Session::has('form_values'))
-				{{ Form::text('voornaam', Session::get('form_values')['voornaam']) }}
-			@else
-				{{ Form::text('voornaam', $userdata->voornaam) }}
-			@endif
+			{{ Form::text('voornaam', $user->voornaam) }}
 			{{ $errors->first('voornaam', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('achternaam', 'Achternaam:') }}
-			@if(Session::has('form_values'))
-				{{ Form::text('achternaam', Session::get('form_values')['achternaam']) }}
-			@else
-				{{ Form::text('achternaam', $userdata->achternaam) }}
-			@endif
+			{{ Form::text('achternaam', $user->achternaam) }}
 			{{ $errors->first('achternaam', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('adres', 'Adres:') }}
-			@if(Session::has('form_values'))
-				{{ Form::text('adres', Session::get('form_values')['adres']) }}
-			@else
-				{{ Form::text('adres', $userdata->adres) }}
-			@endif
+			{{ Form::text('adres', $user->adres) }}
 			{{ $errors->first('adres', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('postcode', 'Postcode:') }}
-			@if(Session::has('form_values'))
-				{{ Form::text('postcode', Session::get('form_values')['postcode']) }}
-			@else
-				{{ Form::text('postcode', $userdata->postcode) }}
-			@endif
+			{{ Form::text('postcode', $user->postcode) }}
 			{{ $errors->first('postcode', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('city', 'Woonplaats:') }}
-			@if(Session::has('form_values'))
-				{{ Form::text('city', Session::get('form_values')['city']) }}
-			@else
-				{{ Form::text('city', $userdata->city) }}
-			@endif
+			{{ Form::text('city', $user->city) }}
 			{{ $errors->first('city', '<p>:message</p>') }}
 		</p>
 
 		<p>
 			{{ Form::label('land', 'Land:') }}
-			@if(Session::has('form_values'))
-				{{ Form::text('land', Session::get('form_values')['land']) }}
-			@else
-				{{ Form::text('land', $userdata->land) }}
-			@endif
+			{{ Form::text('land', $user->land) }}
 			{{ $errors->first('land', '<p>:message</p>') }}
 		</p>
 

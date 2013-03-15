@@ -7,10 +7,10 @@ Route::get('login', array('as' => 'login', 'uses' => 'users@index'));											
 Route::get('logout', array('as' => 'logout', 'before' => 'authuser', 'uses' => 'users@logout')); 				// logout
 Route::get('users/(:any)', array('as' => 'user', 'uses' => 'users@show'));															// eventueel profile pagina ~
 Route::get('users/new', array('as' => 'new_user', 'uses' => 'users@new')); 															// form register
-Route::get('users/edit', array('as' => 'edit_user', 'before' => 'authuser', 'uses' => 'users@edit')); 	// form edit
+Route::get('users/edit', array('as' => 'edit_user', 'before' => 'authuser', 'uses' => 'users@edit'));	// form edit
 Route::post('users', 'users@create');																																		// POST register
 Route::post('login', array('before' => 'csrf', 'as' => 'login_post', 'uses' => 'users@login'));															// POST login
-Route::put('users', array('before' => 'authuser', 'uses' => 'users@update')); 													// POST/PUT update
+Route::put('users/update', array('before' => 'authuser', 'uses' => 'users@update')); 													// POST/PUT update
 Route::delete('users/(:any)', 'users@destroy'); 																												// niet gebruikt ~
 
 // bedrijf Resource

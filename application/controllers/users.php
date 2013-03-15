@@ -8,157 +8,95 @@ class Users_Controller extends Base_Controller {
 		return View::make('user.index');
 	}
 
-	public function post_create(){
-
-		$rules = array(
-			'voornaam' => 'required',
-			'achternaam' => 'required',
-			'email' => 'required|unique:users,email|email',
-			'password' => 'required|min:6|confirmed',
-			'password_confirmation' => 'required|required_with:first_name',
-			'adres' => 'required',
-			'postcode' => 'required',
-			'city' => 'required',
-			'land' => 'required'
-		);
-
-		$messages = array(
-			'required' => 'The :attribute field is required.',
-			'unique' => 'The :attribute field already exists.'
-		);
-
-		$validation = Validator::make(Input::all(), $rules, $messages);
-
-		$values = array(
-			'voornaam' => Input::get('voornaam'),
-			'achternaam' => Input::get('achternaam'),
-    		'email' => Input::get('email'),
-    		'password' => Hash::make(Input::get('password')),
-    		'adres' => Input::get('adres'),
-    		'postcode' => Input::get('postcode'),
-    		'city' => Input::get('city'),
-    		'land' => Input::get('land'),
-    	);
-
-		if ($validation->fails()) {
-			unset($values['password']);
-        	return Redirect::to_route('new_user')->with('form_values', $values)->with_errors($validation);
-    	} else {
-    		
-    		$user = User::create($values);
-    		if($user){
-    			return Redirect::to_route('index')->with('message', 'your account had been created');
-    		} else {
-    			return 'database error';
-    		}
-    	}
-
-	}
-
-	public function get_show(){
-		
-	}
-
-	public function get_edit(){
-
-		$user = Auth::user();
-
-		return View::make('user.edit', array('userdata' => $user));
-	}
-
 	public function get_new(){
 		return View::make('user.new');
 	}
 
+	public function post_create(){
+
+		$validation = User::validate(Input::all());
+
+		if($validation->passes()) {
+			User::create(array(
+				'voornaam' => Input::get('voornaam'),
+				'achternaam' => Input::get('achternaam'),
+				'email' => Input::get('email'),
+				'password' => Hash::make(Input::get('password')),
+				'adres' => Input::get('adres'),
+				'postcode' => Input::get('postcode'),
+				'city' => Input::get('city'),
+				'land' => Input::get('land')
+			));
+
+			$user = User::where_username(Input::get('email')) -> first();
+			Auth::login($user);
+
+			return Redirect::to_route('index')
+				->with('message', 'Thanks for registering. You are now logged in.');
+		} else {
+			return Redirect::to_route('register') -> with_errors($validation) -> with_input();
+		}
+	}
+
+	public function get_show(){
+
+	}
+
+	public function get_edit(){
+		return View::make('user.edit')
+			-> with('user', Auth::user());
+	}
+
 	public function put_update(){
 
-		$rules = array(
-			'voornaam' => 'required',
-			'achternaam' => 'required',
-			'adres' => 'required',
-			'postcode' => 'required',
-			'city' => 'required',
-			'land' => 'required'	
-		);
+		$validation = true;
 
-		$messages = array(
-			'required' => 'The :attribute field is required.'
-		);
+		if($validation) {
+			User::update(Auth::user() -> iduser, array(
+				'voornaam' => Input::get('voornaam'),
+				'achternaam' => Input::get('achternaam'),
+				'adres' => Input::get('adres'),
+				'postcode' => Input::get('postcode'),
+				'city' => Input::get('city'),
+				'land' => Input::get('land')
+			));
 
-		$validation = Validator::make(Input::all(), $rules, $messages);
-
-		$values = array(
-			'voornaam' => Input::get('voornaam'),
-			'achternaam' => Input::get('achternaam'),
-    		'adres' => Input::get('adres'),
-    		'postcode' => Input::get('postcode'),
-    		'city' => Input::get('city'),
-    		'land' => Input::get('land'),
-    	);
-
-		if ($validation->fails()) {
-			return Redirect::to_route('edit_user')->with('form_values', $values)->with_errors($validation);
-    	} else {
-
-			$user = Auth::user();
-			$user->fill($values);
-			$user->save();
-			return Redirect::to_route('edit_user')->with('message', 'your account had been edited');
-
-    	}
-
+			return Redirect::to_route('edit_user') -> with('message', 'Je profiel is geüpdate!');
+		} else {
+			return Redirect::to_route('edit_user')
+				-> with_errors($validation)
+				-> with('message', 'Er is iets mis gegaan. :(');
+		}
 	}
 
-	public function detele_destroy(){
-	
+	public function get_login() {
+		return View::make('users.login')
+			->with('title', 'Laravel Test - Login');
 	}
 
-	public function post_login(){
-
-		$rules = array(
-			'email' => 'required|email',
-			'password' => 'required|min:6'
+	public function post_login() {
+		$user = array(
+			'username' => Input::get('email'),
+			'password' => Input::get('password')
 		);
 
-		$messages = array(
-			'required' => 'The :attribute field is required.'
-		);
-
-		$validation = Validator::make(Input::all(), $rules, $messages);
-
-		if ($validation->fails()) {
-        	return Redirect::to_route('login')->with('form_values', array('email' => Input::get('email')))->with_errors($validation);
-    	} else {
-
-			$credentials = array(
-				'username' => Input::get('email'),
-				'password' => Input::get('password')
-			);
-
-			if(Auth::attempt($credentials)){
-				
-				$user = Auth::user();
-				$bedrijven = $user->bedrijven()->get();
-
-				if(empty($bedrijven)){
-					Session::put('logintype', 'user');
-				} else {
-					foreach ($bedrijven as $key => $value) {
-						$bedrijven_array[] = $value->idbedrijf;
-					}
-					Session::put('logintype', 'bedrijf');
-					Session::put('businessids', $bedrijven_array);
-				}
-				return Redirect::to_route('index');
-			}
-			Session::flash('message', 'email and password combination is not correct');
-			return Redirect::to_route('login')->with('form_values', array('email' => Input::get('email')));
-    	}
+		if(Auth::attempt($user)) {
+			return Redirect::to_route('index')
+				->with('message', 'You are now logged in!');
+		} else {
+			return Redirect::to_route('login')
+				-> with('message', 'Your username/password combination was incorrect')
+				-> with_input();
+		}
 	}
 
-	public function get_logout(){
-		Auth::logout();
-		// unset any session variables
-		return Redirect::to_route('index');
+	public function get_logout() {
+		if(Auth::check()) {
+			Auth::logout();
+			return Redirect::to_route('login')
+				->with('message', 'You are now logged out!');
+		} else {
+			return Redirect::to_route('index');
+		}
 	}
 }
