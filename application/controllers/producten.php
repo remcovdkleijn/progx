@@ -17,7 +17,7 @@ class Producten_Controller extends Base_Controller {
 		$product = Product::find($product_id);
 
 		return View::make('product.show')
-		-> with('product' => $product);
+		-> with('product', $product);
 	}
 
 	public function get_new($bedrijfsid){
