@@ -1,11 +1,13 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Mijn gegevens</h2>
+	<h2>Gebruiker aanpassen</h2>
 
 	{{ Form::open('user/update', 'PUT') }}
 
-		<p> Jouw e-mailadres: {{ $user->email }} </p>
+		{{ Form::token() }}
+
+		<p> E-mail adres: {{ $user->email }} </p>
 
 		<p>
 			{{ Form::label('voornaam', 'Voornaam:') }}
@@ -43,7 +45,8 @@
 			{{ $errors->first('land', '<p>:message</p>') }}
 		</p>
 
+		{{ Form::hidden('user_id', $user -> iduser) }}
+
 		{{ Form::submit('Wijzigingen opslaan') }}
 	{{ Form::close() }}
-
 @endsection

@@ -81,12 +81,17 @@ class Users_Controller extends Base_Controller {
 			-> with('user', $user);
 	}
 
-	public function get_edit(){
+	public function get_edit($user_id = NULL){
+
+		$user = User::find($user_id);
+
 		return View::make('user.edit')
-			-> with('user', Auth::user());
+			-> with('user', $user);
 	}
 
 	public function put_update(){
+
+		$id = Input::get('user_id');
 
 		$profile_rules = array(
 			'voornaam' => 'required',
@@ -100,7 +105,7 @@ class Users_Controller extends Base_Controller {
 		$validation = Validator::make(Input::all(), $profile_rules);
 
 		if($validation -> passes()) {
-			User::update(Auth::user() -> iduser, array(
+			User::update($id, array(
 				'voornaam' => Input::get('voornaam'),
 				'achternaam' => Input::get('achternaam'),
 				'adres' => Input::get('adres'),
@@ -109,7 +114,7 @@ class Users_Controller extends Base_Controller {
 				'land' => Input::get('land')
 			));
 
-			return Redirect::to_route('edit_user') -> with('message', 'Je profiel is geüpdate!');
+			return Redirect::to_route('edit_user', $id) -> with('message', 'Je profiel is geüpdate!');
 		} else {
 			return Redirect::to_route('edit_user')
 				-> with_errors($validation)
