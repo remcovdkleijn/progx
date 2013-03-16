@@ -120,9 +120,6 @@ class Aanbiedingen_Controller extends Base_Controller {
 			$newproducten = Input::get('producten');
 
 			$aanbieding = Aanbieding::find($index);
-			$aanbieding->producten()->delete();
-			$aanbieding->fill($values);
-			$aanbieding->save();
 
 			if(is_array($newproducten)){
 				foreach ($newproducten as $key => $value) {
@@ -141,16 +138,19 @@ class Aanbiedingen_Controller extends Base_Controller {
 		}
 	}
 
-	public function get_destroy($index){
-		$aanbieding = Aanbieding::with('producten')->where('idaanbieding', '=', $index)->first();
+	public function get_destroy($aanbieding_id){
+
+		$aanbieding = Aanbieding::find($aanbieding_id);
+
 		if(is_null($aanbieding)){
 			return Redirect::to_route('index');
 		}
 
 		if(!$this->check_business_auth($aanbieding->producten[0]->idbedrijf)){ return Redirect::to_route('index'); }
 
-		$aanbieding->producten()->delete();
-		$aanbieding->delete();
+		$aanbieding -> producten() -> delete();
+		$aanbieding -> delete();
+
 		return Redirect::to_route('bedrijven')->with('message', 'de aanbieding is verwijderd');
 	}
 
