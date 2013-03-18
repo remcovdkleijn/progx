@@ -25,7 +25,6 @@
 			{{ Form::password('password_confirmation') }}
 			{{ $errors->first('password_confirmation', '<p>:message</p>') }}
 		</p>
-		<p>&nbsp;</p>
 
 		<h3>Persoonsgegevens</h3>
 		<p>
