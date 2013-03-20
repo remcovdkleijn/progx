@@ -124,7 +124,7 @@ Route::filter('auth_admin', function()
 
 Route::filter('auth_bedrijf', function()
 {
-	if ( ! ( Auth::check() || Auth::user() -> bedrijven)) {
+	if ( Auth::guest() || count(Auth::user() -> bedrijven) == 0) {
 		return Redirect::to_route('index');
 	}
 });
