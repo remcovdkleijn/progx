@@ -32,7 +32,7 @@ Route::get('producten/(:num)/edit', 			array('as' => 'edit_product', 		'uses' =>
 Route::get('producten/(:num)/delete', 		array('as' => 'del_product', 			'uses' => 'producten@destroy', 		'before' => 'auth_bedrijf'			));		// any = idproduct
 Route::post('producten/create', 					array(														'uses' => 'producten@create', 		'before' => 'csrf|auth_bedrijf'	));
 Route::put('producten/update', 						array(														'uses' => 'producten@update', 		'before' => 'csrf|auth_bedrijf'	));		// any = idproduct
-Route::get('producten/delete/(:num)', 	array('as' => 'delete_product', 	'uses' => 'producten@destroy'																			));
+Route::get('producten/delete/(:num)', 		array('as' => 'delete_product', 	'uses' => 'producten@destroy'																			));
 
 // aanbiedingen Resource
 Route::get('aanbiedingen', 								array('as' => 'all_aanbiedingen', 'uses' => 'aanbiedingen@index'																		));		// alle aanbiedingen
@@ -48,8 +48,10 @@ Route::get('bedrijf/(:num)/producten/new',			array('as' => 'new_product', 						
 Route::get('bedrijf/(:num)/aanbiedingen',				array('as' => 'all_aanbiedingen_from_bedrijf', 	'uses' => 'aanbiedingen@all_per_bedrijf', 	'before' => 'auth_bedrijf'			));		// any = idbedrijf
 Route::get('bedrijf/(:num)/aanbiedingen/new',		array('as' => 'new_aanbieding', 								'uses' => 'aanbiedingen@new', 							'before' => 'auth_bedrijf'			));		// any = idbedrijf
 
-Route::get('cart',												array('as' => 'cart', 'uses' => 'cart@index'));
-Route::get('cart/add/(:num)', 						array('as' => 'add_product_on_cart', 'uses' => 'cart@get', 					'before' => ''									));
+Route::get('cart',												array('as' => 'cart', 								'uses' => 'cart@index'																					));
+Route::get('cart/add/(:num)', 						array('as' => 'add_product_on_cart', 	'uses' => 'cart@add', 					'before' => ''									));
+Route::get('cart/delete/(:any)', 					array('as' => 'delete_from_cart', 		'uses' => 'cart@destroy'																				));
+Route::put('cart/update',									array(																'uses' => 'cart@update', 				'before' => 'csrf'							));
 
 /*
 |--------------------------------------------------------------------------

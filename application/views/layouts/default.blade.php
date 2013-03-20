@@ -30,6 +30,7 @@
 					@if(Auth::user() -> is_admin)
 						<li>{{ HTML::link_to_route('showall_user', 'Gebruikers') }}
 					@endif
+					<li>{{ HTML::link_to_route('cart', 'Winkelwagen (0)') }}</li>
 				@endif
 			</ul>
 		</div>
