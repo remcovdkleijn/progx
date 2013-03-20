@@ -1,7 +1,7 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Edit bedrijf</h2>
+	<h2>Wijzig bedrijf</h2>
 
 	{{ Form::open('bedrijf/update', 'PUT') }}
 
@@ -63,7 +63,7 @@
 		{{ $errors->first('land', '<p>:message</p>') }}
 		<br />
 
-		{{ Form::submit('save') }}
+		{{ Form::submit('Gegevens wijzigen') }}
 	{{ Form::close() }}
 
 @endsection

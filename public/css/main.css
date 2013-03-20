@@ -7,6 +7,16 @@ body{
 
 }
 
+a {
+	color: #000;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: #000;
+	text-decoration: none;
+}
+
 p {
 	margin: 0 0 8px;
 }
@@ -41,6 +51,9 @@ h1,h2,h3,h4,h5,h6 {
 #main_nav ul li {
 	display: block;
 	float: left;
+}
+#main_nav ul li:last-child {
+	float: right;
 }
 
 #main_nav ul li a{

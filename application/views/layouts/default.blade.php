@@ -19,11 +19,10 @@
 			<ul>
 				<li>{{ HTML::link_to_route('index', 'Home') }}</li>
 				@if( ! Auth::check())
-				<li>{{ HTML::link_to_route('register_user', 'Registreren') }}</li>
-				<li>{{ HTML::link_to_route('login', 'Inloggen') }}</li>
+					<li>{{ HTML::link_to_route('register_user', 'Registreren') }}</li>
+					<li>{{ HTML::link_to_route('login', 'Inloggen') }}</li>
 				@else
 					<li>{{ HTML::link_to_route('edit_user', 'Mijn profiel', Auth::user() -> iduser) }}</li>
-					<li>{{ HTML::link_to_route('logout', 'Uitloggen') }}</li>
 					@if (count(Auth::user() -> bedrijven) > 0)
 						<li>{{ HTML::link_to_route('bedrijven', 'Mijn bedrijven') }}</li>
 					@endif
@@ -31,6 +30,7 @@
 						<li>{{ HTML::link_to_route('showall_user', 'Gebruikers') }}
 					@endif
 					<li>{{ HTML::link_to_route('cart', 'Winkelwagen (0)') }}</li>
+					<li>{{ HTML::link_to_route('logout', 'Uitloggen') }}</li>
 				@endif
 			</ul>
 		</div>
