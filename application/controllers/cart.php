@@ -40,7 +40,7 @@ class Cart_Controller extends Base_Controller {
 			Cartify::cart()->update($item);
 		}
 
-		Redirect::to_route('cart')
+		return Redirect::to_route('cart')
 			-> with('message', 'Uw aantallen zijn doorgevoerd.');
 	}
 
@@ -48,7 +48,7 @@ class Cart_Controller extends Base_Controller {
 
 		Cartify::cart()->remove($rowid);
 
-		Redirect::to_route('cart')
+		return Redirect::to_route('cart')
 			-> with('message', 'Het product is verwijderd.');
 	}
 
