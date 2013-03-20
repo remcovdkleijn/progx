@@ -1,60 +1,52 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Edit product</h2>
+	<h2>Product aanpassen</h2>
+
+	@if($errors -> has())
+	<ul id="form-errors">
+		{{ $errors -> first('naam', '<li>:message</li>') }}
+		{{ $errors -> first('omschrijving', '<li>:message</li>') }}
+		{{ $errors -> first('categorie', '<li>:message</li>') }}
+		{{ $errors -> first('hoeveelheid', '<li>:message</li>') }}
+		{{ $errors -> first('prijs', '<li>:message</li>') }}
+	</ul>
+	@endif
 
 	{{ Form::open('producten/update', 'PUT') }}
 
 		{{ Form::token() }}
 
-		{{ Form::hidden('product_id', $product -> idproduct) }}
+		{{ Form::hidden('bedrijf_id', $product -> bedrijf -> bedrijfsid) }}
 
-		{{ Form::label('naam', 'Naam') }}
-		@if(Session::has('form_values'))
-			{{ Form::text('naam', Session::get('form_values')['naam']) }}
-		@else
-			{{ Form::text('naam', $product->naam) }}
-		@endif
-		{{ $errors->first('naam', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('naam', 'Naam') }}
+			{{ Form::text('naam', Input::old('naam', $product -> naam)) }}
+		</p>
 
-		{{ Form::label('omschrijving', 'omschrijving') }}
-		@if(Session::has('form_values'))
-			{{ Form::text('omschrijving', Session::get('form_values')['omschrijving']) }}
-		@else
-			{{ Form::text('omschrijving', $product->omschrijving) }}
-		@endif
-		{{ $errors->first('omschrijving', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('omschrijving', 'Omschrijving') }}
+			{{ Form::text('omschrijving', Input::old('omschrijving', $product -> omschrijving)) }}
+		</p>
 
-		{{ Form::label('categorie', 'Categorie') }}
-		@if(Session::has('form_values'))
-			{{ Form::select('categorie', $categorieen, Session::get('form_values')['categorie']) }}
-		@else
-			{{ Form::select('categorie', $categorieen, $product->productcategorie->categorie) }}
-		@endif
-		{{ $errors->first('categorie', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('categorie', 'Categorie') }}
+			{{ Form::select('categorie', $categorieen, Input::old('categorie', $product -> categorie)) }}
+			<a href="#">Nieuwe categorie</a>
+		</p>
 
-		{{ Form::label('hoeveelheid', 'Hoeveelheid') }}
-		@if(Session::has('form_values'))
-			{{ Form::text('hoeveelheid', Session::get('form_values')['hoeveelheid']) }}
-		@else
-			{{ Form::text('hoeveelheid', $product->hoeveelheid) }}
-		@endif
-		{{ $errors->first('hoeveelheid', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('hoeveelheid', 'Hoeveelheid') }}
+			{{ Form::text('hoeveelheid', Input::old('hoeveelheid', $product -> hoeveelheid)) }}
+		</p>
 
-		{{ Form::label('prijs', 'Prijs') }}
-		@if(Session::has('form_values'))
-			{{ Form::text('prijs', Session::get('form_values')['prijs']) }}
-		@else
-			{{ Form::text('prijs', $product->prijs) }}
-		@endif
-		{{ $errors->first('prijs', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('prijs', 'Prijs') }}
+			{{ Form::text('prijs', Input::old('prijs', $product -> prijs)) }}
+		</p>
 
-		{{ Form::submit('save') }}
+		{{ Form::submit('Toevoegen') }}
+
 	{{ Form::close() }}
 
 @endsection

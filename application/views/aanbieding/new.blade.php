@@ -1,47 +1,60 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>new aanbieding</h2>
+	<h2>Aanbieding toevoegen</h2>
 
-	{{ Form::open('aanbiedingen') }}
+	@if($errors -> has())
+	<ul id="form-errors">
+		{{ $errors -> first('actienaam', '<li>:message</li>') }}
+		{{ $errors -> first('omschrijving', '<li>:message</li>') }}
+		{{ $errors -> first('korting', '<li>:message</li>') }}
+		{{ $errors -> first('producten', '<li>:message</li>') }}
+		{{ $errors -> first('actief', '<li>:message</li>') }}
+	</ul>
+	@endif
+
+	{{ Form::open('aanbiedingen/create', 'POST') }}
 
 		{{ Form::token() }}
 
-		{{ Form::hidden('idbedrijf', $bedrijf->idbedrijf) }}
+		{{ Form::hidden('bedrijf_id', $bedrijf->idbedrijf) }}
 
-		{{ Form::label('actienaam', 'Actienaam') }}
-		{{ Form::text('actienaam', Input::old('actienaam')) }}
-		{{ $errors->first('actienaam', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('actienaam', 'Actienaam') }}
+			{{ Form::text('actienaam', Input::old('actienaam')) }}
+		</p>
 
-		{{ Form::label('omschrijving', 'Omschrijving') }}
-		{{ Form::text('omschrijving', Input::old('omschrijving')) }}
-		{{ $errors->first('omschrijving', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('omschrijving', 'Omschrijving') }}
+			{{ Form::text('omschrijving', Input::old('omschrijving')) }}
+		</p>
 
-		{{ Form::label('korting', 'Korting') }}
-		{{ Form::text('korting', Input::old('korting')) }}
-		{{ $errors->first('korting', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('korting', 'Korting') }}
+			{{ Form::text('korting', Input::old('korting')) }}
+		</p>
 
-		@forelse ($producten as $product)
+		<p>
+			@forelse ($producten as $product)
 
-			{{ Form::label('producten', $product->naam) }}
-			{{ Form::checkbox('producten[]', $product->idproduct, Input::old('producten')) }}
+				{{ Form::label('producten', $product->naam) }}
+				{{ Form::checkbox('producten[]', $product->idproduct, Input::old('producten')) }}
 
-		@empty
-			<p>Er zijn geen producten</p>
-			<a href="{{ URL::to_route('new_product', $bedrijf->idbedrijf) }}">New Product</a>
-		@endforelse
-		{{ $errors->first('producten', '<p>:message</p>') }}
-		<br />
+			@empty
 
-		{{ Form::label('actief', 'Direct actief?') }}
-		{{ Form::checkbox('actief', 1, Input::old('actief')) }}
-		{{ $errors->first('actief', '<p>:message</p>') }}
-		<br />
+				<p>Er zijn geen producten</p>
+				{{ HTML::link_to_route('new_product', 'Product toevoegen', $bedrijf -> idbedrijf) }}
 
-		{{ Form::submit('save') }}
+			@endforelse
+		</p>
+
+		<p>
+			{{ Form::label('actief', 'Direct actief?') }}
+			{{ Form::checkbox('actief', 1, Input::old('actief')) }}
+		</p>
+
+		{{ Form::submit('Aanbieding toevoegen') }}
+
 	{{ Form::close() }}
 
 @endsection

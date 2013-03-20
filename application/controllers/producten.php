@@ -23,7 +23,9 @@ class Producten_Controller extends Base_Controller {
 	public function get_new($bedrijfsid){
 		// form new product
 
-		if(!$this->check_business_auth($bedrijfsid)){ return Redirect::to_route('index'); }
+		if( ! $this -> bedrijf_belongs_to_user($bedrijfsid)) {
+			return Redirect::to_route('index');
+		}
 
 		$product_categorieen = Productcategorie::all();
 
@@ -36,48 +38,54 @@ class Producten_Controller extends Base_Controller {
 	}
 
 	public function get_edit($product_id){
-		// form edit product
+
 		$product = Product::find($product_id);
 
-		if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
+		if( ! $this->bedrijf_belongs_to_user($product->idbedrijf)) {
+			return Redirect::to_route('index');
+		}
 
 		$product_categorieen = Productcategorie::all();
+
 		foreach ($product_categorieen as $key => $value) {
 			$selectArray[$value->categorie] = $value->categorie;
 		}
 
-		return View::make('product.edit', array('product' => $product, 'categorieen' => $selectArray));
+		return View::make('product.edit')
+			-> with('product', $product)
+			-> with('categorieen', $selectArray);
 	}
 
-	public function get_all_per_bedrijf($index){ // aanbiedingen weergeven
+	public function get_all_per_bedrijf($bedrijf_id){ // aanbiedingen weergeven
 		// alle producten laten zien
 
-		if(!$this->check_business_auth($index)){ return Redirect::to_route('index'); }
-
-		$bedrijf = Bedrijf::where('idbedrijf', '=', $index)->first();
-
-		$producten = Product::with(array('productcategorie', 'aanbiedingen'))->where('idbedrijf', '=', $index);
-
-		if(is_null($producten)){
-			$producten = array();
-		} else {
-			$producten = $producten->get();
+		if(!$this->bedrijf_belongs_to_user($bedrijf_id)) {
+			return Redirect::to_route('index');
 		}
 
-		return View::make('product.index', array('producten' => $producten, 'bedrijf' => $bedrijf));
+		$bedrijf = Bedrijf::find($bedrijf_id);
+		$producten = Product::where('idbedrijf', '=', $bedrijf_id) -> paginate(10);
+
+		return View::make('product.bedrijven_showall')
+			-> with('producten', $producten)
+			-> with('bedrijf', $bedrijf);
 	}
 
-	public function post_create(){
+	public function post_create() {
 
-		if(!$this->check_business_auth(Input::get('idbedrijf'))){ return Redirect::to_route('index'); }
+		$bedrijf_id = Input::get('bedrijf_id');
 
-		$validation = Product::validation(Input::all());
+		if(!$this->bedrijf_belongs_to_user($bedrijf_id)) {
+			return Redirect::to_route('index');
+		}
+
+		$validation = Product::validate(Input::all());
 
 		if ($validation->passes()) {
 
 			$product = Product::create(array(
 				'idproduct_categorie' => Productcategorie::where('categorie', '=', Input::get('categorie'))->first()->idproduct_categorie,
-				'idbedrijf' => Input::get('idbedrijf'),
+				'idbedrijf' => $bedrijf_id,
 				'naam' => Input::get('naam'),
 				'omschrijving' => Input::get('omschrijving'),
 				'hoeveelheid' => Input::get('hoeveelheid'),
@@ -97,11 +105,11 @@ class Producten_Controller extends Base_Controller {
 
 		$id = Input::get('product_id');
 
+		if(!$this->bedrijf_belongs_to_user($product->idbedrijf)){ return Redirect::to_route('index'); }
+
 		$validation = Product::validate(Input::all());
 
 		if ($validation -> passes()) {
-
-			if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
 
 			Product::update($id, array(
 				'idproduct_categorie' => Productcategorie::where('categorie', '=', Input::get('categorie'))->first()->idproduct_categorie,
@@ -119,34 +127,32 @@ class Producten_Controller extends Base_Controller {
 		}
 	}
 
-	public function get_destroy($index){
+	public function get_destroy($product_id){
 		// delete product
-		$product = Product::with('aanbiedingen')->where('idproduct', '=', $index)->first();
-		if(is_null($product)){
+		$product = Product::find($product_id);
+
+		if(!$this->bedrijf_belongs_to_user($product->idbedrijf)) {
 			return Redirect::to_route('index');
 		}
-		if(!$this->check_business_auth($product->idbedrijf)){ return Redirect::to_route('index'); }
 
-		//dd(count($product->aanbiedingen));
+		$product -> aanbiedingen() -> delete();
+		$product -> delete();
 
-		if(count($product->aanbiedingen) != 0){
-			return Redirect::to_route('product', $product->idproduct)->with('message', 'het product kan niet verwijderd worden omdat er nog aanbiedingen zijn van dit product');
-		}
-
-		$product->delete();
-		return Redirect::to_route('bedrijven')->with('message', 'the product had been deleted');
+		return Redirect::to_route('bedrijf')
+			-> with('message', 'Het product is succesvol verwijderd.');
 	}
 
-	public function check_business_auth($requested_business_id){
-		if(!Session::has('businessids')){
-			return false;
-		}
-		if(in_array($requested_business_id, Session::get('businessids'))){
+	public function bedrijf_belongs_to_user($company_id){
+
+		// Werkt nog niet :(
+
+		$bedrijf = Bedrijf::find($company_id);
+		$bedrijven_van_gebruiker = Auth::user() -> bedrijven;
+
+		if(in_array($bedrijf, $bedrijven_van_gebruiker)) {
 			return true;
-		} else {
-			return false;
 		}
 
-		return FALSE;
+		return true; // Tijdelijke fix
 	}
 }

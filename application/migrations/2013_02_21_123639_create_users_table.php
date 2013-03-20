@@ -20,7 +20,7 @@ class Create_Users_Table {
 
 		DB::table('users') -> insert(array(
 			'email' => 'admin@admin.nl',
-			'password' => '$2a$08$WDBpcm5KanU0RjM5c2x3TeLDrOscHBYjycYfvIrBd0ZccycommyFe',
+			'password' => Hash::make('admin'),
 			'is_admin' => TRUE
 		));
 	}

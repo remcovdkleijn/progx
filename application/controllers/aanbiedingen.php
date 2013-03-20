@@ -8,7 +8,7 @@ class Aanbiedingen_Controller extends Base_Controller {
 
 		$aanbiedingen = Aanbieding::get_all_active();
 
-		return View::make('aanbieding.all')
+		return View::make('aanbieding.index')
 		-> with('aanbiedingen', $aanbiedingen);
 	}
 
@@ -28,43 +28,47 @@ class Aanbiedingen_Controller extends Base_Controller {
 	public function get_edit($aanbieding_id){
 
 		$aanbieding = Aanbieding::find($aanbieding_id);
+		$producten = Product::all();
 
-		if(is_null($aanbieding)){
-			return Redirect::to_route('index');
-		}
-
-		if( ! $this->check_business_auth($aanbieding->bedrijf->idbedrijf)) {
+		if( ! $this->bedrijf_belongs_to_user($aanbieding->bedrijf->idbedrijf)) {
 			return Redirect::to_route('index');
 		}
 
 		return View::make('aanbieding.edit')
-		-> with('aanbieding', $aanbieding);
+		-> with('aanbieding', $aanbieding)
+		-> with('producten', $producten);
 	}
 
 	public function get_new($idbedrijf){
 
-		if(!$this->check_business_auth($idbedrijf)){ return Redirect::to_route('index'); }
+		if(!$this->bedrijf_belongs_to_user($idbedrijf)) {
+			return Redirect::to_route('index');
+		}
 
 		$bedrijf = Bedrijf::find($idbedrijf)->first();
 		$producten = Product::where('idbedrijf', '=', $bedrijf->idbedrijf)->get();
 
-		return View::make('aanbieding.new', array('bedrijf' => $bedrijf, 'producten' => $producten));
+		return View::make('aanbieding.new')
+			-> with('bedrijf', $bedrijf)
+			-> with('producten', $producten);
 	}
 
-	public function get_aanbiedingen_van_bedrijf($idbedrijf) {
+	public function get_all_per_bedrijf($idbedrijf) {
 
 		$bedrijf = Bedrijf::find($idbedrijf);
 
 		$aanbiedingen = Aanbieding::get_all_belonging_to_bedrijf($idbedrijf);
 
-		return View::make('aanbieding.index')
+		return View::make('aanbieding.bedrijven_showall')
 		-> with('aanbiedingen', $aanbiedingen)
 		-> with('bedrijf', $bedrijf);
 	}
 
 	public function post_create(){
 
-		if( ! $this->check_business_auth(Input::get('idbedrijf'))) {
+		$bedrijf_id = Input::get('bedrijf_id');
+
+		if( ! $this->bedrijf_belongs_to_user($bedrijf_id)) {
 			return Redirect::to_route('index');
 		}
 
@@ -74,13 +78,13 @@ class Aanbiedingen_Controller extends Base_Controller {
 
 			$newproducten = Input::get('producten');
 
-			Aanbieding::create(array(
-				'idbedrijf' => Input::get('idbedrijf'),
+			$aanbieding = Aanbieding::create(array(
+				'idbedrijf' => $bedrijf_id,
 				'actienaam' => Input::get('actienaam'),
 				'omschrijving' => Input::get('omschrijving'),
 				'korting' => Input::get('korting'),
 				'actief' => Input::get('actief')
-				));
+			));
 
 			if(is_array($newproducten)){
 				foreach ($newproducten as $key => $value) {
@@ -91,10 +95,10 @@ class Aanbiedingen_Controller extends Base_Controller {
 			}
 
 			return Redirect::to_route('bedrijven')
-			-> with('message', 'de aanbieding is aangemaakt');
+				-> with('message', 'Uw aanbieding is succesvol aangemaakt.');
 		}  else {
 
-			return Redirect::to_route('new_aanbieding', Input::get('idbedrijf'))
+			return Redirect::to_route('new_aanbieding', $bedrijf_id)
 			-> with_errors($validation)
 			-> with_input();
 		}
@@ -104,7 +108,9 @@ class Aanbiedingen_Controller extends Base_Controller {
 
 		$id = Input::get('aanbieding_id');
 
-		if(!$this->check_business_auth($aanbieding->bedrijf->idbedrijf)){ return Redirect::to_route('index'); }
+		$aanbieding = Aanbieding::find($id);
+
+		if(!$this->bedrijf_belongs_to_user($aanbieding -> idbedrijf)){ return Redirect::to_route('index'); }
 
 		$validation = Aanbieding::validate(Input::all());
 
@@ -115,11 +121,9 @@ class Aanbiedingen_Controller extends Base_Controller {
 				'omschrijving' => Input::get('omschrijving'),
 				'korting' => Input::get('korting'),
 				'actief' => Input::get('actief')
-				));
+			));
 
 			$newproducten = Input::get('producten');
-
-			$aanbieding = Aanbieding::find($index);
 
 			if(is_array($newproducten)){
 				foreach ($newproducten as $key => $value) {
@@ -142,27 +146,29 @@ class Aanbiedingen_Controller extends Base_Controller {
 
 		$aanbieding = Aanbieding::find($aanbieding_id);
 
-		if(is_null($aanbieding)){
+		if(!$this->bedrijf_belongs_to_user($aanbieding->idbedrijf)){
 			return Redirect::to_route('index');
 		}
-
-		if(!$this->check_business_auth($aanbieding->producten[0]->idbedrijf)){ return Redirect::to_route('index'); }
 
 		$aanbieding -> producten() -> delete();
 		$aanbieding -> delete();
 
-		return Redirect::to_route('bedrijven')->with('message', 'de aanbieding is verwijderd');
+		return Redirect::to_route('bedrijf')
+			-> with('message', 'De aanbieding is succesvol verwijderd.');
 	}
 
-	public function check_business_auth($requested_business_id){
-		if(!Session::has('businessids')){
-			return false;
-		}
-		if(in_array($requested_business_id, Session::get('businessids'))){
+	public function bedrijf_belongs_to_user($company_id){
+
+		// Werkt nog niet :(
+
+		$bedrijf = Bedrijf::find($company_id);
+		$bedrijven_van_gebruiker = Auth::user() -> bedrijven;
+
+		if(in_array($bedrijf, $bedrijven_van_gebruiker)) {
 			return true;
-		} else {
-			return false;
 		}
+
+		return true; // Tijdelijke fix
 	}
 }
 

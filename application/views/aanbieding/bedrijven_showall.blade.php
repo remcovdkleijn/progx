@@ -1,7 +1,7 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>Alle aanbiedingen</h2>
+	<h2>Alle aanbiedingen van bedrijf "{{ $bedrijf -> bedrijfsnaam}}"</h2>
 
 	@if(!$aanbiedingen)
 		<p>Er zijn geen aanbiedingen.</p>
@@ -12,7 +12,9 @@
 					<th>Naam van de actie</th>
 					<th>Omschrijving</th>
 					<th>Korting</th>
+					<th>Actief?</th>
 					<th>Producten</th>
+					<th></th>
 				</tr>
 			</thead>
 
@@ -21,6 +23,7 @@
 				<td>{{ HTML::link_to_route('aanbieding', $aanbieding -> actienaam, $aanbieding -> idaanbieding) }}</td>
 				<td>{{ $aanbieding -> omschrijving }}</td>
 				<td>{{ $aanbieding -> korting }}</td>
+				<td>{{ ($aanbieding -> actief) ? ("Ja") : ("Nee") }}</td>
 				<td>
 					@if(!$aanbieding -> producten())
 					<ul>
@@ -38,6 +41,10 @@
 						<p>Er zijn geen producten</p>
 					@endif
 					</ul>
+				</td>
+				<td>
+					{{ HTML::link_to_route('edit_aanbieding', 'Aanpassen', $aanbieding -> idaanbieding) }}
+					{{ HTML::link_to_route('delete_aanbieding', 'Verwijderen', $aanbieding -> idaanbieding) }}
 				</td>
 			</tr>
 			@endforeach

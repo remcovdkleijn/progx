@@ -73,3 +73,24 @@ form input[type='submit'] {
 	padding: 4px 12px;
 	margin-left: 200px;
 }
+
+table { width: 100%;}
+table tr th {
+	text-align: left;
+}
+
+table td, table th {
+	padding: 4px 6px;
+}
+
+table thead tr {
+	background: #888 !important;
+}
+
+table tr:nth-child(odd) {
+	background: #eee;
+}
+
+table tr:nth-child(even) {
+	background: #d8d8d8;
+}

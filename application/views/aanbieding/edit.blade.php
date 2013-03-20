@@ -1,7 +1,17 @@
 @layout('layouts.default')
 
 @section('content')
-	<h2>new aanbieding</h2>
+	<h2>Aanbieding aanpassen</h2>
+
+	@if($errors -> has())
+	<ul id="form-errors">
+		{{ $errors -> first('actienaam', '<li>:message</li>') }}
+		{{ $errors -> first('omschrijving', '<li>:message</li>') }}
+		{{ $errors -> first('korting', '<li>:message</li>') }}
+		{{ $errors -> first('producten', '<li>:message</li>') }}
+		{{ $errors -> first('actief', '<li>:message</li>') }}
+	</ul>
+	@endif
 
 	{{ Form::open('aanbiedingen/update', 'PUT') }}
 
@@ -10,72 +20,47 @@
 		{{ Form::hidden('aanbieding_id', $aanbieding -> idaanbieding) }}
 		{{ Form::hidden('bedrijf_id', $aanbieding -> bedrijf -> idbedrijf) }}
 
-		{{ Form::label('actienaam', 'Actienaam') }}
-		@if(Session::has('form_values'))
-			{{ Form::text('actienaam', Session::get('form_values')['actienaam']) }}
-		@else
-			{{ Form::text('actienaam', $aanbieding->actienaam) }}
-		@endif
-		{{ $errors->first('actienaam', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('actienaam', 'Actienaam') }}
+			{{ Form::text('actienaam', Input::old('actienaam', $aanbieding -> actienaam)) }}
+		</p>
 
-		{{ Form::label('omschrijving', 'Omschrijving') }}
-		@if(Session::has('form_values'))
-			{{ Form::text('omschrijving', Session::get('form_values')['omschrijving']) }}
-		@else
-			{{ Form::text('omschrijving', $aanbieding->omschrijving) }}
-		@endif
-		{{ $errors->first('omschrijving', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('omschrijving', 'Omschrijving') }}
+			{{ Form::text('omschrijving', Input::old('omschrijving', $aanbieding -> omschrijving)) }}
+		</p>
 
-		{{ Form::label('korting', 'Korting') }}
-		@if(Session::has('form_values'))
-			{{ Form::text('korting', Session::get('form_values')['korting']) }}
-		@else
-			{{ Form::text('korting', $aanbieding->korting) }}
-		@endif
-		{{ $errors->first('korting', '<p>:message</p>') }}
-		<br />
+		<p>
+			{{ Form::label('korting', 'Korting') }}
+			{{ Form::text('korting', Input::old('korting', $aanbieding -> korting)) }}
+		</p>
 
 		@forelse ($producten as $product)
 
 			{{ Form::label('producten', $product->naam) }}
 
-			<?php
-			if(Session::has('form_values')){
-				if(!is_null(Session::get('form_values')['producten']) && in_array($product->idproduct, Session::get('form_values')['producten'])){
-					echo Form::checkbox('producten[]', $product->idproduct, true);
-				} else {
-					echo Form::checkbox('producten[]', $product->idproduct);
-				}
-
-			} else {
-				if(in_array($product->idproduct, $producten_per_aanbieding)) {
-					echo Form::checkbox('producten[]', $product->idproduct, true);
-				} else {
-					echo Form::checkbox('producten[]', $product->idproduct);
-				}
-			}
-			?>
+			@if(in_array($product, $aanbieding -> producten))
+				{{ Form::checkbox('producten', 1, false) }}
+			@else
+				{{ Form::checkbox('producten', 0, true) }}
+			@endif
 
 		@empty
 			<p>Er zijn geen producten</p>
-			<a href="{{ URL::to_route('new_product', $aanbieding->bedrijf->idbedrijf) }}">New Product</a>
+			{{ HTML::link_to_route('new_product', 'Product aanmaken', $aanbieding->bedrijf->idbedrijf) }}
 		@endforelse
-		{{ $errors->first('producten', '<p>:message</p>') }}
-		<br />
 
-		{{ Form::label('actief', 'Actief') }}
-		@if($aanbieding -> actief == 0)
-			{{ Form::checkbox('actief', 1, false) }}
-		@elseif($aanbieding -> actief == 1)
-			{{ Form::checkbox('actief', 0, true) }}
-		@endif
+		<p>
+			{{ Form::label('actief', 'Actief') }}
+			@if($aanbieding -> actief == 0)
+				{{ Form::checkbox('actief', 1, false) }}
+			@elseif($aanbieding -> actief == 1)
+				{{ Form::checkbox('actief', 0, true) }}
+			@endif
+		</p>
 
-		{{ $errors->first('actief', '<p>:message</p>') }}
-		<br />
+		{{ Form::submit('Aanbieding opslaan') }}
 
-		{{ Form::submit('save') }}
 	{{ Form::close() }}
 
 @endsection
