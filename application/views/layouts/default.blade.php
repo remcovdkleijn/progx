@@ -29,7 +29,7 @@
 					@if(Auth::user() -> is_admin)
 						<li>{{ HTML::link_to_route('showall_user', 'Gebruikers') }}
 					@endif
-					<li>{{ HTML::link_to_route('cart', 'Winkelwagen (0)') }}</li>
+					<li>{{ HTML::link_to_route('cart', 'Winkelwagen ('.Cartify::cart()->total_items().')') }}</li>
 					<li>{{ HTML::link_to_route('logout', 'Uitloggen') }}</li>
 				@endif
 			</ul>
