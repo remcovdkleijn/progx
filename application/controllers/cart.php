@@ -30,18 +30,23 @@ class Cart_Controller extends Base_Controller {
 
 		$items = Input::get('items');
 
-		foreach($items as $key => $value) {
+		if( count($items) > 0 )
+		{
+			foreach($items as $key => $value) {
 
-			$item = array(
-				'rowid' => $key,
-				'qty' => $value['qty']
-			);
+				$item = array(
+					'rowid' => $key,
+					'qty' => $value['qty']
+				);
 
-			Cartify::cart()->update($item);
+				Cartify::cart()->update($item);
+			}
+
+			return Redirect::to_route('cart')
+				-> with('message', 'Uw aantallen zijn doorgevoerd.');
 		}
 
-		return Redirect::to_route('cart')
-			-> with('message', 'Uw aantallen zijn doorgevoerd.');
+		return Redirect::to_route('cart');
 	}
 
 	public function get_destroy($rowid) {
