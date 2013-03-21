@@ -2,18 +2,6 @@
 
 @section('content')
 
-
-
-	@foreach($test->orderregels as $orderregel)
-
-		{{$orderregel->price}}
-
-		{{$orderregel->product->naam}}
-		{{$orderregel->product->prijs}}
-
-	@endforeach
-
-
 	{{ Form::open('cart/update', 'PUT') }}
 
 		{{ Form::token() }}

@@ -5,9 +5,7 @@ class Cart_Controller extends Base_Controller {
 	public $restful = true;
 
 	public function get_index() {
-		$order = Order::where('id', '=', '2')->first();
-
-		return View::make('cart.index')->with('test', $order);
+		return View::make('cart.index');
 	}
 
 	public function get_add($id) {
@@ -71,19 +69,20 @@ class Cart_Controller extends Base_Controller {
 		$this -> validate_cart_contents();
 
 		$order = Order::create(array(
-			'iduser' => Auth::user() -> iduser
+			'iduser' => Auth::user() -> iduser,
+			'totaal_prijs' => Cartify::cart() -> total()
 		));
 
 		foreach(Cartify::cart() -> contents() as $item) {
 			Orderregel::create(array(
 				'idproduct' => $item['id'],
-				'order_id' => $order -> idorder,
+				'order_id' => $order -> id,
 				'price' => $item['price'],
 				'qty' =>$item['qty']
 			));
 		}
 
-		return Redirect::to_route('show_order', $order -> idorder);
+		return Redirect::to_route('show_order', $order -> id);
 	}
 
 	private function validate_cart_contents() {

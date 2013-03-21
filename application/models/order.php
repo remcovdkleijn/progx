@@ -1,8 +1,6 @@
 <?php
 
 class Order extends Basemodel {
-	public static $timestamps = false;
-
 	public static $table = "orders";
 
 	public static $key = "id";
@@ -13,5 +11,9 @@ class Order extends Basemodel {
 
 	public function user(){
 		return $this -> belongs_to('User', 'iduser');
+	}
+
+	public static function orders_by_user($user_id) {
+		return static::where('iduser', '=', $user_id) -> get();
 	}
 }

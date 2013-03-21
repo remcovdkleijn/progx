@@ -17,7 +17,7 @@ Route::put('user/update', 								array( 														'uses' => 'users@update',
 Route::delete('user/(:num)', 							array(														'uses' => 'users@destroy'																					)); 	// niet gebruikt ~
 
 Route::get('user/order',									array('as' => 'orders',						'uses' => 'orders@index'));
-Route::get('user/order/(:num)', 					array('as' => 'show_order',				'uses' => 'orders@show'));
+Route::get('user/order/(:num)', 					array('as' => 'show_order',				'uses' => 'orders@show', 					'before' => 'auth'));
 
 
 // bedrijf Resource

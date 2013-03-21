@@ -48,5 +48,11 @@
 		{{ Form::hidden('user_id', $user -> iduser) }}
 
 		{{ Form::submit('Wijzigingen opslaan') }}
+
 	{{ Form::close() }}
+
+	<br />
+
+	{{ HTML::link_to_route('orders', 'Toon bestellingen') }}
+
 @endsection

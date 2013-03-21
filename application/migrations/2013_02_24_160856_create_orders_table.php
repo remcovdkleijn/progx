@@ -7,6 +7,7 @@ class Create_Orders_Table {
 		Schema::create('orders', function($table) {
 			$table->increments('id');
 			$table->integer('iduser')->unsigned();
+			$table->decimal('totaal_prijs', 7, 2);
 			$table->timestamps();
 
 			$table->foreign('iduser')->references('iduser')->on('users') -> on_delete('cascade') -> on_update('cascade');

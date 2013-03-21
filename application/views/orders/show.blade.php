@@ -12,13 +12,14 @@
 	</thead>
 	<tbody>
 
-		@foreach($regels as $regel)
+		@foreach($order->orderregels as $regel)
 		<tr>
-			<td>{{ HTML::link_to_route('producten', $regel -> product() -> naam, $regel -> product() -> idproduct) }}</td>
+			<td>{{ HTML::link_to_route('product', $regel -> product -> naam, $regel -> product -> idproduct) }}</td>
 			<td>{{ $regel -> qty }}</td>
 			<td>€ {{ $regel -> price }}</td>
 		</tr>
 		@endforeach
+
 	</tbody>
 </table>
 
