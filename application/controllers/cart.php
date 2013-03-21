@@ -74,7 +74,7 @@ class Cart_Controller extends Base_Controller {
 
 		foreach(Cartify::cart() -> contents() as $item) {
 			Orderregel::create(array(
-				'product_id' => $item['id'],
+				'idproduct' => $item['id'],
 				'order_id' => $order -> idorder,
 				'price' => $item['price'],
 				'qty' =>$item['qty']

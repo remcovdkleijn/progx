@@ -10,8 +10,8 @@ class Create_Transacties_Table {
 			$table->integer('idtransactie_type')->unsigned();
 			//$table->timestamps();
 
-			$table->foreign('idtransactie_type')->references('idtransactie_type')->on('transactie_types');
-			$table->foreign('iduser')->references('iduser')->on('users');
+			$table->foreign('idtransactie_type')->references('idtransactie_type')->on('transactie_types') -> on_delete('cascade') -> on_update('cascade');
+			$table->foreign('iduser')->references('iduser')->on('users') -> on_delete('cascade') -> on_update('cascade');
 		});
 
     }

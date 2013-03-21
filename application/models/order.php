@@ -3,9 +3,9 @@
 class Order extends Basemodel {
 	public static $timestamps = false;
 
-	public static $key = 'idorder';
+	// public static $key = 'order_id';
 
 	public function order_regels() {
-		return $this -> has_many('Order_regel');
+		return $this -> has_many('Orderregel');
 	}
 }

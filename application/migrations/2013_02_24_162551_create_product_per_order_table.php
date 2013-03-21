@@ -10,8 +10,8 @@ class Create_Product_Per_Order_Table {
 			$table->integer('product_id')->unsigned();
 			//$table->timestamps();
 
-			$table->foreign('order_id')->references('idorder')->on('orders');
-			$table->foreign('product_id')->references('idproduct')->on('producten');
+			$table->foreign('order_id')->references('id')->on('orders')-> on_delete('cascade') -> on_update('cascade');
+			$table->foreign('product_id')->references('idproduct')->on('producten')-> on_delete('cascade') -> on_update('cascade');
 		});
 
     }

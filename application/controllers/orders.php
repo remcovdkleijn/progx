@@ -13,8 +13,13 @@ class Orders_Controller extends Base_Controller {
 
 		$order = Order::find($order_id);
 
+		$regels = Orderregel::where('order_id', '=', $order_id) -> get();
+
+		// dd($regels);
+
 		return View::make('orders.show')
-			-> with('order', $order);
+			-> with('order', $order)
+			-> with('regels', $regels);
 	}
 
 }

@@ -5,11 +5,11 @@ class Create_Orders_Table {
 	public function up()
 	{
 		Schema::create('orders', function($table) {
-			$table->increments('idorder');
+			$table->increments('id');
 			$table->integer('iduser')->unsigned();
-			//$table->timestamps();
+			$table->timestamps();
 
-			$table->foreign('iduser')->references('iduser')->on('users');
+			$table->foreign('iduser')->references('iduser')->on('users') -> on_delete('cascade') -> on_update('cascade');
 		});
 	}
 

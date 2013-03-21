@@ -28,7 +28,7 @@ class Product extends Basemodel {
 	}
 
 	public function order_regels() {
-		return $this -> has_many('Order_regel', 'product_id');
+		return $this -> has_many('Orderregel', 'product_id');
 	}
 
 

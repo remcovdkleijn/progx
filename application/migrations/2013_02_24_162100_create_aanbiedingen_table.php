@@ -13,7 +13,7 @@ class Create_Aanbiedingen_Table {
 			$table->boolean('actief');
 			//$table->timestamps();
 
-			$table->foreign('idbedrijf')->references('idbedrijf')->on('bedrijven');
+			$table->foreign('idbedrijf')->references('idbedrijf')->on('bedrijven')-> on_delete('cascade') -> on_update('cascade');
 		});
     }
 

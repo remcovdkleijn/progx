@@ -10,8 +10,8 @@ class Create_Product_Per_Aanbieding_Table {
 			$table->integer('aanbieding_id')->unsigned();
 			//$table->timestamps();
 
-			$table->foreign('product_id')->references('idproduct')->on('producten');
-			$table->foreign('aanbieding_id')->references('idaanbieding')->on('aanbiedingen');
+			$table->foreign('product_id')->references('idproduct')->on('producten')-> on_delete('cascade') -> on_update('cascade');
+			$table->foreign('aanbieding_id')->references('idaanbieding')->on('aanbiedingen')-> on_delete('cascade') -> on_update('cascade');
 		});
 
     }

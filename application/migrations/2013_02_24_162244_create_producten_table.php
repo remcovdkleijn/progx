@@ -14,8 +14,8 @@ class Create_Producten_Table {
 			$table->string('prijs');
 			$table->timestamps();
 
-			$table->foreign('idproduct_categorie')->references('idproduct_categorie')->on('product_categorieen');
-			$table->foreign('idbedrijf')->references('idbedrijf')->on('bedrijven');
+			$table->foreign('idproduct_categorie')->references('idproduct_categorie')->on('product_categorieen')-> on_delete('cascade') -> on_update('cascade');
+			$table->foreign('idbedrijf')->references('idbedrijf')->on('bedrijven')-> on_delete('cascade') -> on_update('cascade');
 		});
 
     }

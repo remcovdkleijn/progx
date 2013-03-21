@@ -10,8 +10,8 @@ class Create_Users_Per_Bedrijf_Table {
 			$table->integer('bedrijf_id')->unsigned();
 			//$table->timestamps();
 
-			$table->foreign('user_id')->references('iduser')->on('users');
-			$table->foreign('bedrijf_id')->references('idbedrijf')->on('bedrijven');
+			$table->foreign('user_id')->references('iduser')->on('users')-> on_delete('cascade') -> on_update('cascade');
+			$table->foreign('bedrijf_id')->references('idbedrijf')->on('bedrijven')-> on_delete('cascade') -> on_update('cascade');
 		});
 
     }

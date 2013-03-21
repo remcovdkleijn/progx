@@ -9,7 +9,7 @@ class Create_Giftcards_Table {
 			$table->integer('iduser')->nullable()->unsigned();
 			//$table->timestamps();
 
-			$table->foreign('iduser')->references('iduser')->on('users');
+			$table->foreign('iduser')->references('iduser')->on('users')-> on_delete('cascade') -> on_update('cascade');
 		});
 
     }

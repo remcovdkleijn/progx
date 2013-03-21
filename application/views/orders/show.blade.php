@@ -11,9 +11,10 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($order_regels as $regel)
+
+		@foreach($regels as $regel)
 		<tr>
-			<td>{{ HTML::link_to_route('producten', $regel -> product() -> productnaam, $regel -> product() -> idproduct) }}</td>
+			<td>{{ HTML::link_to_route('producten', $regel -> product() -> naam, $regel -> product() -> idproduct) }}</td>
 			<td>{{ $regel -> qty }}</td>
 			<td>€ {{ $regel -> price }}</td>
 		</tr>
