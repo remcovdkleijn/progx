@@ -68,14 +68,14 @@ class Cart_Controller extends Base_Controller {
 
 		$this -> validate_cart_contents();
 
-		$order = Order::insert(array(
+		$order = Order::create(array(
 			'iduser' => Auth::user() -> iduser
 		));
 
 		foreach(Cartify::cart() -> contents() as $item) {
 			Order_regel::create(array(
 				'product_id' => $item['id'],
-				'order_id' => $order -> id,
+				'order_id' => $order -> idorder,
 				'price' => $item['price'],
 				'qty' =>$item['qty']
 			));

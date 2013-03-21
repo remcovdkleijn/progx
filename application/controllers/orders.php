@@ -6,7 +6,7 @@ class Orders_Controller extends Base_Controller {
 
 	public function get_index() {
 
-		// Show all orders
+		return View::make('orders.index');
 	}
 
 	public function get_show($order_id) {

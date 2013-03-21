@@ -16,6 +16,7 @@ Route::post('register', 									array('as' => 'register_user', 		'uses' => 'use
 Route::put('user/update', 								array( 														'uses' => 'users@update', 				'before' => 'csrf'							)); 	// POST/PUT update
 Route::delete('user/(:num)', 							array(														'uses' => 'users@destroy'																					)); 	// niet gebruikt ~
 
+Route::get('user/order',									array('as' => 'orders',						'uses' => 'orders@index'));
 Route::get('user/order/(:num)', 					array('as' => 'show_order',				'uses' => 'orders@show'));
 
 
