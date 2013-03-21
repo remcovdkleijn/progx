@@ -16,6 +16,9 @@ Route::post('register', 									array('as' => 'register_user', 		'uses' => 'use
 Route::put('user/update', 								array( 														'uses' => 'users@update', 				'before' => 'csrf'							)); 	// POST/PUT update
 Route::delete('user/(:num)', 							array(														'uses' => 'users@destroy'																					)); 	// niet gebruikt ~
 
+Route::get('user/order/(:num)', 					array('as' => 'show_order',				'uses' => 'orders@show'));
+
+
 // bedrijf Resource
 Route::get('bedrijf', 										array('as' => 'bedrijven', 				'uses' => 'bedrijven@index',			'before' => 'auth_bedrijf'			));		// show alle bedrijven van user
 Route::get('bedrijf/new', 								array('as' => 'new_bedrijf', 			'uses' => 'bedrijven@new'																					)); 	// form new bedrijf
@@ -52,6 +55,9 @@ Route::get('cart',												array('as' => 'cart', 								'uses' => 'cart@inde
 Route::get('cart/add/(:num)', 						array('as' => 'add_product_on_cart', 	'uses' => 'cart@add', 					'before' => ''									));
 Route::get('cart/delete/(:any)', 					array('as' => 'delete_from_cart', 		'uses' => 'cart@destroy'																				));
 Route::put('cart/update',									array(																'uses' => 'cart@update', 				'before' => 'csrf'							));
+Route::get('cart/checkout',								array('as' => 'checkout_cart',				'uses' => 'cart@checkout',			'before' => 'auth'							));
+Route::post('cart/checkout',							array(																'uses' => 'cart@checkout',			'before' => 'auth|csrf'					));
+
 
 /*
 |--------------------------------------------------------------------------

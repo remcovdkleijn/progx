@@ -27,5 +27,9 @@ class Product extends Basemodel {
 		return $this->has_many_and_belongs_to('Aanbieding', 'product_per_aanbieding');
 	}
 
+	public function order_regels() {
+		return $this -> has_many('Order_regel', 'product_id');
+	}
+
 
 }

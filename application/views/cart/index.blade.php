@@ -37,4 +37,6 @@
 
 	{{ Form::close() }}
 
+	{{ HTML::link_to_route('checkout_cart', 'Betalen') }}
+
 @endsection
