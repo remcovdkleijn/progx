@@ -5,7 +5,9 @@ class Cart_Controller extends Base_Controller {
 	public $restful = true;
 
 	public function get_index() {
-		return View::make('cart.index');
+		$order = Order::where('id', '=', '2')->first();
+
+		return View::make('cart.index')->with('test', $order);
 	}
 
 	public function get_add($id) {
