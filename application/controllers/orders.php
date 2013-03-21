@@ -11,8 +11,10 @@ class Orders_Controller extends Base_Controller {
 
 	public function get_show($order_id) {
 
-		Order::find($order_id);
+		$order = Order::find($order_id);
 
 		return View::make('orders.show')
 			-> with('order', $order);
 	}
+
+}

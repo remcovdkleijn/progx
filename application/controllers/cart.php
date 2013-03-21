@@ -73,7 +73,7 @@ class Cart_Controller extends Base_Controller {
 		));
 
 		foreach(Cartify::cart() -> contents() as $item) {
-			Order_regel::create(array(
+			Orderregel::create(array(
 				'product_id' => $item['id'],
 				'order_id' => $order -> idorder,
 				'price' => $item['price'],
@@ -81,7 +81,7 @@ class Cart_Controller extends Base_Controller {
 			));
 		}
 
-		return Redirect::to_route('show_order', $order -> id);
+		return Redirect::to_route('show_order', $order -> idorder);
 	}
 
 	private function validate_cart_contents() {
