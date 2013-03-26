@@ -5,7 +5,6 @@ class Orders_Controller extends Base_Controller {
 	public $restful = true;
 
 	public function get_index() {
-
 		$orders = Order::orders_by_user(Auth::user() -> iduser);
 
 		return View::make('orders.index')
@@ -13,7 +12,6 @@ class Orders_Controller extends Base_Controller {
 	}
 
 	public function get_show($order_id) {
-
 		if( ! $this -> order_belongs_to_user($order_id)) {
 			return Redirect::to_route('index');
 		}

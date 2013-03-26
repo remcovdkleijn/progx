@@ -11,7 +11,7 @@
 
 		{{ Form::label('bedrijfsnaam', 'Bedrijfsnaam') }}
 		@if(Session::has('form_values'))
-			{{ Form::text('bedrijfsnaam', Session::get('form_values')['bedrijfsnaam']) }}
+			{{ Form::text('bedrijfsnaam', Input::old('bedrijfsnaam')) }}
 		@else
 			{{ Form::text('bedrijfsnaam', $bedrijf->bedrijfsnaam) }}
 		@endif
@@ -20,7 +20,7 @@
 
 		{{ Form::label('kvk', 'KVK') }}
 		@if(Session::has('form_values'))
-			{{ Form::text('kvk', Session::get('form_values')['kvk']) }}
+			{{ Form::text('kvk', Input::old('kvk')) }}
 		@else
 			{{ Form::text('kvk', $bedrijf->kvk) }}
 		@endif
@@ -29,7 +29,7 @@
 
 		{{ Form::label('adres', 'Adres') }}
 		@if(Session::has('form_values'))
-			{{ Form::text('adres', Session::get('form_values')['adres']) }}
+			{{ Form::text('adres', Input::old('adres')) }}
 		@else
 			{{ Form::text('adres', $bedrijf->adres) }}
 		@endif
@@ -38,7 +38,7 @@
 
 		{{ Form::label('postcode', 'Postcode') }}
 		@if(Session::has('form_values'))
-			{{ Form::text('postcode', Session::get('form_values')['postcode']) }}
+			{{ Form::text('postcode', Input::old('postcode')) }}
 		@else
 			{{ Form::text('postcode', $bedrijf->postcode) }}
 		@endif
@@ -47,7 +47,7 @@
 
 		{{ Form::label('city', 'Stad') }}
 		@if(Session::has('form_values'))
-			{{ Form::text('city', Session::get('form_values')['city']) }}
+			{{ Form::text('city', Input::old('city')) }}
 		@else
 			{{ Form::text('city', $bedrijf->city) }}
 		@endif
@@ -56,7 +56,7 @@
 
 		{{ Form::label('land', 'Land') }}
 		@if(Session::has('form_values'))
-			{{ Form::text('land', Session::get('form_values')['land']) }}
+			{{ Form::text('land', Input::old('land')) }}
 		@else
 			{{ Form::text('land', $bedrijf->land) }}
 		@endif

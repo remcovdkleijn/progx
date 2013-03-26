@@ -93,7 +93,7 @@ class Producten_Controller extends Base_Controller {
 			));
 
 			return Redirect::to_route('bedrijven')
-			->with('message', 'Product is opgeslagen!');
+			->with('message', 'Het product is opgeslagen!');
 		} else {
 			return Redirect::to_route('new_product')
 			-> with_input()
@@ -105,7 +105,9 @@ class Producten_Controller extends Base_Controller {
 
 		$id = Input::get('product_id');
 
-		if(!$this->bedrijf_belongs_to_user($product->idbedrijf)){ return Redirect::to_route('index'); }
+		if(!$this->bedrijf_belongs_to_user($product->idbedrijf)){ 
+			return Redirect::to_route('index'); 
+		}
 
 		$validation = Product::validate(Input::all());
 
@@ -119,7 +121,7 @@ class Producten_Controller extends Base_Controller {
 				'prijs' => Input::get('prijs')
 			));
 
-			return Redirect::to_route('bedrijven')->with('message', 'the product had been edited');
+			return Redirect::to_route('bedrijven')->with('message', 'Het product is succesvol aangepast.');
 		} else {
 			return Redirect::to_route('edit_product', $id)
 			-> with_input()
@@ -142,17 +144,22 @@ class Producten_Controller extends Base_Controller {
 			-> with('message', 'Het product is succesvol verwijderd.');
 	}
 
-	public function bedrijf_belongs_to_user($company_id){
-
-		// Werkt nog niet :(
-
+	public function bedrijf_belongs_to_user($company_id)
+	{
 		$bedrijf = Bedrijf::find($company_id);
 		$bedrijven_van_gebruiker = Auth::user() -> bedrijven;
-
-		if(in_array($bedrijf, $bedrijven_van_gebruiker)) {
-			return true;
+		
+		if( count( $bedrijven_van_gebruiker ) > 0 )
+		{
+			foreach( $bedrijven_van_gebruiker as $used )
+			{
+				if( $used->original['idbedrijf'] == $bedrijf->original['idbedrijf'] )
+				{
+					return true;
+				}
+			}
 		}
 
-		return true; // Tijdelijke fix
+		return false;
 	}
 }

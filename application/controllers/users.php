@@ -24,10 +24,10 @@ class Users_Controller extends Base_Controller {
 
 		if(Auth::attempt($user)) {
 			return Redirect::to_route('index')
-				->with('message', 'You are now logged in!');
+				->with('message', 'Je bent nu ingelogd!');
 		} else {
 			return Redirect::to_route('login')
-				-> with('message', 'Your username/password combination was incorrect')
+				-> with('message', 'Gebruikersnaam / wachtwoord komen niet overeen.')
 				-> with_input();
 		}
 	}
@@ -36,7 +36,7 @@ class Users_Controller extends Base_Controller {
 		if(Auth::check()) {
 			Auth::logout();
 			return Redirect::to_route('login')
-				->with('message', 'You are now logged out!');
+				->with('message', 'Je bent nu uitgelogd!');
 		} else {
 			return Redirect::to_route('index');
 		}
@@ -66,7 +66,7 @@ class Users_Controller extends Base_Controller {
 			Auth::login($user);
 
 			return Redirect::to_route('index')
-				->with('message', 'Thanks for registering. You are now logged in.');
+				->with('message', 'Bedankt voor het registreren. Je bent nu ingelogd.');
 		} else {
 			return Redirect::to_route('register_user')
 				-> with_errors($validation)
@@ -114,7 +114,7 @@ class Users_Controller extends Base_Controller {
 				'land' => Input::get('land')
 			));
 
-			return Redirect::to_route('edit_user', $id) -> with('message', 'Je profiel is geüpdate!');
+			return Redirect::to_route('edit_user', $id) -> with('message', 'Je profiel is geüpdated!');
 		} else {
 			return Redirect::to_route('edit_user')
 				-> with_errors($validation)
