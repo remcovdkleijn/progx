@@ -7,8 +7,8 @@ class Aanbieding extends Basemodel {
 		'actienaam' => 'required',
 		//'omschrijving' => '',
 		'korting' => 'required|numeric',
-		'producten' => 'required',
-		'actief' => 'required'
+		'producten' => 'required'
+		//'actief' => 'required'
 	);
 
 	public static $key = 'idaanbieding';

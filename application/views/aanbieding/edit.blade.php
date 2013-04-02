@@ -40,9 +40,9 @@
 			{{ Form::label('producten', $product->naam) }}
 
 			@if(in_array($product, $aanbieding -> producten))
-				{{ Form::checkbox('producten', 1, false) }}
+				{{ Form::checkbox('producten', $product->idproduct, false) }}
 			@else
-				{{ Form::checkbox('producten', 0, true) }}
+				{{ Form::checkbox('producten', $product->idproduct, true) }}
 			@endif
 
 		@empty

@@ -83,7 +83,7 @@ class Aanbiedingen_Controller extends Base_Controller {
 				'actienaam' => Input::get('actienaam'),
 				'omschrijving' => Input::get('omschrijving'),
 				'korting' => Input::get('korting'),
-				'actief' => Input::get('actief')
+				'actief' => (is_null(Input::get('actief')) ? 0 : 1)
 			));
 
 			if(is_array($newproducten)){
@@ -120,7 +120,7 @@ class Aanbiedingen_Controller extends Base_Controller {
 				'actienaam' => Input::get('actienaam'),
 				'omschrijving' => Input::get('omschrijving'),
 				'korting' => Input::get('korting'),
-				'actief' => Input::get('actief')
+				'actief' => (is_null(Input::get('actief')) ? 0 : 1)
 			));
 
 			$newproducten = Input::get('producten');
