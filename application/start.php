@@ -174,3 +174,39 @@ if ( ! Request::cli() and Config::get('session.driver') !== '')
 
 
 Laravel\Database\Eloquent\Pivot::$timestamps = false;
+
+
+// dependency injection 
+// http://codehappy.daylerees.com/ioc-container
+IoC::register('controller: users', function(){
+	$usercontroller = new Users_Controller;
+
+	// eventueel configuraties
+	//$usercontroller->iets = "iets";
+
+    return $usercontroller;
+});
+
+IoC::register('controller: aanbiedingen', function(){
+    return new Aanbiedingen_Controller;
+});
+
+IoC::register('controller: bedrijven', function(){
+    return new Bedrijven_Controller;
+});
+
+IoC::register('controller: cart', function(){
+    return new Cart_Controller;
+});
+
+IoC::register('controller: home', function(){
+    return new Home_Controller;
+});
+
+IoC::register('controller: orders', function(){
+    return new Orders_Controller;
+});
+
+IoC::register('controller: producten', function(){
+    return new Producten_Controller;
+});
