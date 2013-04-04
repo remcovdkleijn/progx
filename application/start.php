@@ -76,6 +76,8 @@ Autoloader::map(array(
 Autoloader::directories(array(
 	path('app').'models',
 	path('app').'libraries',
+	path('app').'services',
+	path('app').'dal'
 ));
 
 /*
@@ -177,8 +179,9 @@ Laravel\Database\Eloquent\Pivot::$timestamps = false;
 
 
 // dependency injection 
+// http://laravel.com/docs/controllers#dependency-injection
 // http://codehappy.daylerees.com/ioc-container
-IoC::register('controller: users', function(){
+IoC::singleton('controller: users', function(){
 	$usercontroller = new Users_Controller;
 
 	// eventueel configuraties
@@ -187,26 +190,32 @@ IoC::register('controller: users', function(){
     return $usercontroller;
 });
 
-IoC::register('controller: aanbiedingen', function(){
+IoC::singleton('controller: aanbiedingen', function(){
     return new Aanbiedingen_Controller;
 });
 
-IoC::register('controller: bedrijven', function(){
+IoC::singleton('controller: bedrijven', function(){
     return new Bedrijven_Controller;
 });
 
-IoC::register('controller: cart', function(){
+IoC::singleton('controller: cart', function(){
     return new Cart_Controller;
 });
 
-IoC::register('controller: home', function(){
+IoC::singleton('controller: home', function(){
     return new Home_Controller;
 });
 
-IoC::register('controller: orders', function(){
+IoC::singleton('controller: orders', function(){
     return new Orders_Controller;
 });
 
-IoC::register('controller: producten', function(){
+IoC::singleton('controller: producten', function(){
     return new Producten_Controller;
+});
+
+
+// registreer een user object
+IoC::register('user', function(){
+    return new User();
 });

@@ -68,20 +68,27 @@ class Cart_Controller extends Base_Controller {
 
 		$this -> validate_cart_contents();
 
-		$order = Order::create(array(
-			'iduser' => Auth::user() -> iduser,
-			'totaal_prijs' => Cartify::cart() -> total()
-		));
+		$order = null;
 
-		foreach(Cartify::cart() -> contents() as $item) {
-			Orderregel::create(array(
-				'idproduct' => $item['id'],
-				'order_id' => $order -> id,
-				'price' => $item['price'],
-				'qty' =>$item['qty']
+		DB::transaction( function() use( &$order ) {
+		    $order = Order::create(array(
+				'iduser' => Auth::user() -> iduser,
+				'totaal_prijs' => Cartify::cart() -> total()
 			));
-		}
 
+			foreach(Cartify::cart() -> contents() as $item) {
+				Orderregel::create(array(
+					'idproduct' => $item['id'],
+					'order_id' => $order -> id,
+					'price' => $item['price'],
+					'qty' =>$item['qty']
+				));
+			}
+		} );
+
+		if(is_null($order)){
+			return Redirect::to_route('index')->with('message', 'Er is helaas iets fout gegaan tijden het verwerken van je order.');
+		}
 		return Redirect::to_route('show_order', $order -> id);
 	}
 

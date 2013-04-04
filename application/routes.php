@@ -6,7 +6,7 @@ Route::get('/', array('as' => 'index', 'uses' => 'home@index'));
 
 // user Resource
 Route::get('login', 											array('as' => 'login', 						'uses' => 'users@login'																						));		// form login
-Route::get('logout', 											array('as' => 'logout', 					'uses' => 'users@logout'																					)); 	// logout
+Route::get('logout', 											array('as' => 'logout', 					'uses' => 'users@logout'	, 'before' => 'auth'																				)); 	// logout
 Route::get('register', 										array('as' => 'register_user',		'uses' => 'users@new'																							));		// form register
 Route::get('user/(:num)', 								array('as' => 'show_user',				'uses' => 'users@show'																						));		// eventueel profile pagina ~
 Route::get('user/(:num)/edit', 						array('as' => 'edit_user', 				'uses' => 'users@edit', 'before' => 'auth'																						));		// form edit
