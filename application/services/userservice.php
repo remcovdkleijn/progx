@@ -18,28 +18,16 @@ class Userservice extends Service {
 		'voornaam' => 'required',
 		'achternaam' => 'required',
 		'adres' => 'required',
-		'postcode' => 'alpha_num',
+		'postcode' => 'required|alpha_num',
 		'city' => 'required',
 		'land' => 'required'
 	);
 
-	public static function login($username, $password){
-		$credentials = array(
-			'username' => $username,
-			'password' => $password
-		);
-
-		if(Auth::attempt($credentials)) {
-			return Redirect::to_route('index')
-				->with('message', 'Je bent nu ingelogd!');
-		} else {
-			return Redirect::to_route('login')
-			-> with('message', 'Gebruikersnaam / wachtwoord komen niet overeen.')
-			-> with_input();
-		}
+	public static function validate_login($credentials){
+		return true;
 	}
 
-	public static function validate_create() {
+	public static function validate_create($data) {
 		return Validator::make($data, static::$rules);
 	}
 

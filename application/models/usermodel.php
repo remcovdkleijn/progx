@@ -4,9 +4,9 @@ class Usermodel {
 
 	public static function create($data){
 
-		$validated = Userservice::validate_create($data);
+		$validation = Userservice::validate_create($data);
 
-		if($validated) {
+		if($validation -> passes()) {
 
 			$user = IoC::resolve('user');
 
@@ -34,9 +34,9 @@ class Usermodel {
 
 	public static function edit($id, $data){
 
-		$validated = Userservice::validate_update($data);
+		$validation = Userservice::validate_update($data);
 
-		if($validated) {
+		if($validation -> passes()) {
 
 			$user = User::find($id);
 
@@ -59,4 +59,20 @@ class Usermodel {
 		}
 	}
 
+	public static function login($credentials) {
+
+		$validation = true; // No validation required
+
+		if($validation) {
+
+			if(Auth::attempt($credentials)) {
+				return Redirect::to_route('index')
+					->with('message', 'Je bent nu ingelogd!');
+			} else {
+				return Redirect::to_route('login')
+				-> with('message', 'Gebruikersnaam / wachtwoord komen niet overeen.')
+				-> with_input();
+			}
+		}
+	}
 }
