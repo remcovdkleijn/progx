@@ -31,7 +31,7 @@ class Users_Controller extends Base_Controller {
 	}
 
 	public function post_create(){
-		return Userservice::create(Input::all());
+		return Usermodel::create(Input::all());
 	}
 
 	public function get_show($user_id = NULL){

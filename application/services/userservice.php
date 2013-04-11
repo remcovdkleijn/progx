@@ -2,11 +2,26 @@
 
 class Userservice extends Service {
 
-	public static $validation;
+	public static $rules = array(
+		'email' => 'required|unique:users|email',
+		'password' => 'required|alpha_num|min:4|confirmed',
+		'password_confirmation' => 'required|alpha_num|min:4',
+		'voornaam' => 'required',
+		'achternaam' => 'required',
+		'adres' => 'required',
+		'postcode' => 'required|alpha_num',
+		'city' => 'required',
+		'land' => 'required'
+	);
 
-	public function __construct(){
-
-	}
+	public static $update_rules = array(
+		'voornaam' => 'required',
+		'achternaam' => 'required',
+		'adres' => 'required',
+		'postcode' => 'alpha_num',
+		'city' => 'required',
+		'land' => 'required'
+	);
 
 	public static function login($username, $password){
 		$credentials = array(
@@ -24,39 +39,11 @@ class Userservice extends Service {
 		}
 	}
 
-	public static function create($data){
-
-		$validation = Usermodel::validate(Input::all());
-
-		if($validation->passes()) {
-
-			$userobj = Usermodel::create($data);
-			Auth::login($userobj);
-
-			return Redirect::to_route('index')
-				->with('message', 'Bedankt voor het registreren. Je bent nu ingelogd.');
-		} else {
-			return Redirect::to_route('register_user')
-				-> with_errors($validation)
-				-> with_input();
-		}
-
+	public static function validate_create() {
+		return Validator::make($data, static::$rules);
 	}
 
-	public static function edit($id, $data){
-
-		$validation = Usermodel::validate_update($data);
-
-		if($validation -> passes()) {
-
-			Usermodel::edit($id, $data);
-
-			return Redirect::to_route('edit_user', $id) -> with('message', 'Je profiel is geüpdated!');
-		} else {
-			return Redirect::to_route('edit_user', $id)
-				-> with_errors($validation)
-				-> with('message', 'Er is iets mis gegaan. :(');
-		}
+	public static function validate_update($data) {
+		return Validator::make($data, static::$update_rules);
 	}
-
 }

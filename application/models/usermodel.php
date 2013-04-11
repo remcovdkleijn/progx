@@ -2,65 +2,61 @@
 
 class Usermodel {
 
-	public static $rules = array(
-		'email' => 'required|unique:users|email',
-		'password' => 'required|alpha_num|min:4|confirmed',
-		'password_confirmation' => 'required|alpha_num|min:4',
-		'voornaam' => 'required',
-		'achternaam' => 'required',
-		'adres' => 'required',
-		'postcode' => 'required|alpha_num',
-		'city' => 'required',
-		'land' => 'required'
-	);
-
-	public static $update_rules = array(
-		'voornaam' => 'required',
-		'achternaam' => 'required',
-		'adres' => 'required',
-		'postcode' => 'alpha_num',
-		'city' => 'required',
-		'land' => 'required'
-	);
-
-	public static function validate($data) {
-		return Validator::make($data, static::$rules);
-	}
-
-	public static function validate_update($data) {
-		return Validator::make($data, static::$update_rules);
-	}
-
 	public static function create($data){
-		$user = IoC::resolve('user');
 
-		$user->voornaam = $data['voornaam'];
-		$user->achternaam = $data['achternaam'];
-		$user->email = $data['email'];
-		$user->password = Hash::make($data['password']);
-		$user->adres = $data['adres'];
-		$user->postcode = $data['postcode'];
-		$user->city = $data['city'];
-		$user->land = $data['land'];
+		$validated = Userservice::validate_create($data);
 
-		$user->save();
+		if($validated) {
 
-		return $user;
+			$user = IoC::resolve('user');
+
+			$user->voornaam = $data['voornaam'];
+			$user->achternaam = $data['achternaam'];
+			$user->email = $data['email'];
+			$user->password = Hash::make($data['password']);
+			$user->adres = $data['adres'];
+			$user->postcode = $data['postcode'];
+			$user->city = $data['city'];
+			$user->land = $data['land'];
+
+			$user->save();
+
+			Auth::login($user);
+
+			return Redirect::to_route('index')
+				->with('message', 'Bedankt voor het registreren. Je bent nu ingelogd.');
+		} else {
+			return Redirect::to_route('register_user')
+				-> with_errors($validation)
+				-> with_input();
+		}
 	}
 
 	public static function edit($id, $data){
-		$user = User::find($id);
 
-		$user->voornaam = $data['voornaam'];
-		$user->achternaam = $data['achternaam'];
-		$user->adres = $data['adres'];
-		$user->postcode = $data['postcode'];
-		$user->city = $data['city'];
-		$user->land = $data['land'];
+		$validated = Userservice::validate_update($data);
 
-		$user->save();
+		if($validated) {
 
-		return $user;
+			$user = User::find($id);
+
+			$user->voornaam = $data['voornaam'];
+			$user->achternaam = $data['achternaam'];
+			$user->adres = $data['adres'];
+			$user->postcode = $data['postcode'];
+			$user->city = $data['city'];
+			$user->land = $data['land'];
+
+			$user->save();
+
+			return Redirect::to_route('edit_user', $id) -> with('message', 'Je profiel is geüpdated!');
+		} else {
+
+			return Redirect::to_route('edit_user', $id)
+				-> with_errors($validation)
+				-> with_input()
+				-> with('message', 'Er is iets mis gegaan. :(');
+		}
 	}
 
 }
