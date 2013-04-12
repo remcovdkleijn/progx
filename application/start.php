@@ -76,8 +76,8 @@ Autoloader::map(array(
 Autoloader::directories(array(
 	path('app').'models',
 	path('app').'libraries',
-	path('app').'services',
-	path('app').'dal'
+	path('app').'progx/services',
+	path('app').'progx/repositories'
 ));
 
 /*

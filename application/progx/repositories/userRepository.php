@@ -1,6 +1,6 @@
 <?php
 
-class Usermodel {
+class UserRepository {
 
 	public static function create($data){
 

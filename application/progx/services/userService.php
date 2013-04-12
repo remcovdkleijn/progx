@@ -1,6 +1,6 @@
 <?php
 
-class Userservice extends Service {
+class UserService {
 
 	public static $rules = array(
 		'email' => 'required|unique:users|email',

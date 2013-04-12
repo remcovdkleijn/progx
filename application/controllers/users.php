@@ -17,7 +17,7 @@ class Users_Controller extends Base_Controller {
 	}
 
 	public function post_login() {
-		return Usermodel::login(
+		return UserRepository::login(
 			array(
 				'username' => Input::get('email'),
 				'password' => Input::get('password'),
@@ -36,7 +36,7 @@ class Users_Controller extends Base_Controller {
 	}
 
 	public function post_create() {
-		return Usermodel::create(Input::all());
+		return UserRepository::create(Input::all());
 	}
 
 	public function get_show($user_id = NULL) {
@@ -55,7 +55,7 @@ class Users_Controller extends Base_Controller {
 	}
 
 	public function put_update() {
-		return Usermodel::edit(Input::get('user_id'), Input::all());
+		return UserRepository::edit(Input::get('user_id'), Input::all());
 	}
 
 }
